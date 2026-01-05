@@ -57,7 +57,7 @@ export class MainMenu extends Scene
         {
             this.logoTween = this.tweens.add({
                 targets: this.logo,
-                x: { value: 750, duration: 3000, ease: 'Back.easeInOut' },
+                x: { value: 750, duration: 1000, ease: 'Back.easeInOut' },
                 y: { value: 80, duration: 1500, ease: 'Sine.easeOut' },
                 yoyo: true,
                 repeat: -1,
