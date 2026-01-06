@@ -1,9 +1,9 @@
 import { Scene } from "phaser";
+import { Enemy } from "../entities/enemy";
 export class Game extends Scene {
     constructor() {
         super("Game");
     }
-
     create() {
         const map = this.make.tilemap({
             key: "mapOne",
@@ -32,9 +32,9 @@ export class Game extends Scene {
             );
             const layerProps = map.createLayer("Props", tilesetGrass, 0, 0);
             const layerDetails = map.createLayer("Details", tilesetGrass, 0, 0);
-            const layerWaypoints = map.getObjectLayer("Waypoints");
-            console.log(layerWaypoints);
         }
+        const layerWaypoints = map.getObjectLayer("Waypoints");
+        console.log(layerWaypoints);
         if (tilesetWater) {
             const layerWater = map.createLayer(
                 "Terrain_Water",
@@ -43,11 +43,27 @@ export class Game extends Scene {
                 0
             );
         }
-        this.player = this.physics.add.sprite(100, 100, "star");
+
+        this.waypoints = layerWaypoints.objects[0].polyline;
+        const startPoint = this.waypoints[1];
+
+        this.path = new Phaser.Curves.Path(startPoint.x, startPoint.y);
+
+        this.waypoints.forEach((point, index) => {
+            if (index === 0) return;
+            this.path.lineTo(point.x, point.y);
+        });
+
+        this.time.addEvent({
+            delay: 1000,
+            repeat: 9,
+            callback: () => {
+                const enemy = new Enemy(this, this.path);
+                enemy.start();
+            },
+        });
     }
 
-    update() {
-this.player.rotation += 0.01;
-    }
+    update() {}
 }
 
