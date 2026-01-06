@@ -39,6 +39,7 @@ export class Preloader extends Scene {
        
         this.load.image("grass", "/tilesets/GrassTileset.png");
         this.load.image("water", "/tilesets/AnimatedWaterTiles.png");
+        this.load.image("tower3", "/towers/Tower03.png")
     }
 
     create() {

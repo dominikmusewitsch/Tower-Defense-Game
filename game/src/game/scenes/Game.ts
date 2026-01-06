@@ -62,6 +62,8 @@ export class Game extends Scene {
                 enemy.start();
             },
         });
+
+        this.add.image(224, 128, "tower3");
     }
 
     update() {}
