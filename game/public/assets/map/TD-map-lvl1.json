@@ -164,9 +164,68 @@
          "width":15,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":14,
+         "name":"Waypoints",
+         "objects":[
+                {
+                 "height":0,
+                 "id":1,
+                 "name":"",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-100,
+                         "y":220
+                        }, 
+                        {
+                         "x":352,
+                         "y":224
+                        }, 
+                        {
+                         "x":350.666666666667,
+                         "y":541.333333333333
+                        }, 
+                        {
+                         "x":868,
+                         "y":545.333333333333
+                        }, 
+                        {
+                         "x":864,
+                         "y":350.666666666667
+                        }, 
+                        {
+                         "x":541.333333333333,
+                         "y":348
+                        }, 
+                        {
+                         "x":542.666666666667,
+                         "y":94.6666666666667
+                        }, 
+                        {
+                         "x":1068,
+                         "y":93.3333333333333
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":0,
+                 "y":0
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":14,
- "nextobjectid":1,
+ "nextlayerid":15,
+ "nextobjectid":2,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

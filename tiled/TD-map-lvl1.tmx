@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="15" height="10" tilewidth="64" tileheight="64" infinite="0" nextlayerid="14" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="15" height="10" tilewidth="64" tileheight="64" infinite="0" nextlayerid="15" nextobjectid="2">
  <editorsettings>
   <export target="../TD-map-lvl1.json" format="json"/>
  </editorsettings>
@@ -111,4 +111,9 @@
 0,0,0,0,0,0,0,0,0,0,0,110,0,0,200
 </data>
  </layer>
+ <objectgroup id="14" name="Waypoints">
+  <object id="1" x="0" y="0">
+   <polyline points="0,0 -101.333,220 352,224 350.667,541.333 868,545.333 864,350.667 541.333,348 542.667,94.6667 1068,93.3333"/>
+  </object>
+ </objectgroup>
 </map>

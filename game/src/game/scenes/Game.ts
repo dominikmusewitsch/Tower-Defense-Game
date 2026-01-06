@@ -32,6 +32,8 @@ export class Game extends Scene {
             );
             const layerProps = map.createLayer("Props", tilesetGrass, 0, 0);
             const layerDetails = map.createLayer("Details", tilesetGrass, 0, 0);
+            const layerWaypoints = map.getObjectLayer("Waypoints");
+            console.log(layerWaypoints);
         }
         if (tilesetWater) {
             const layerWater = map.createLayer(
@@ -41,6 +43,11 @@ export class Game extends Scene {
                 0
             );
         }
+        this.player = this.physics.add.sprite(100, 100, "star");
+    }
+
+    update() {
+this.player.rotation += 0.01;
     }
 }
 
