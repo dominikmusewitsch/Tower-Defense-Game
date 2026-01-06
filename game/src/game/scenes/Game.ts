@@ -1,4 +1,3 @@
-import { EventBus } from "../EventBus";
 import { Scene } from "phaser";
 export class Game extends Scene {
 
@@ -12,7 +11,7 @@ export class Game extends Scene {
         });
         const tilesetGrass = map.addTilesetImage("GrassTileset", "grass");
         const tilesetWater = map.addTilesetImage(
-            "AnimatedWaterTileset",
+            "AnimatedWaterTiles",
             "water"
         );
 
