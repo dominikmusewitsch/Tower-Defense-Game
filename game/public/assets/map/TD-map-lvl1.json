@@ -173,12 +173,30 @@
  "tileheight":64,
  "tilesets":[
         {
+         "columns":16,
          "firstgid":1,
-         "source":"..\/..\/..\/..\/..\/..\/..\/tiled\/GrassTileset.tsx"
+         "image":"..\/tilesets\/GrassTileset.png",
+         "imageheight":1024,
+         "imagewidth":1024,
+         "margin":0,
+         "name":"GrassTileset",
+         "spacing":0,
+         "tilecount":256,
+         "tileheight":64,
+         "tilewidth":64
         }, 
         {
+         "columns":70,
          "firstgid":257,
-         "source":"..\/..\/..\/..\/..\/..\/..\/tiled\/AnimatedWaterTiles.tsx"
+         "image":"..\/tilesets\/AnimatedWaterTiles.png",
+         "imageheight":448,
+         "imagewidth":4480,
+         "margin":0,
+         "name":"AnimatedWaterTiles",
+         "spacing":0,
+         "tilecount":490,
+         "tileheight":64,
+         "tilewidth":64
         }],
  "tilewidth":64,
  "type":"map",

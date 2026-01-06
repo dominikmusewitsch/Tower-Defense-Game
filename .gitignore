@@ -49,3 +49,7 @@ __pycache__/
 # Temporary files
 *.tmp
 *.bak
+
+#tiled session files
+
+*.tiled-session
