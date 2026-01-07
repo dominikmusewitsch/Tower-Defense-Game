@@ -1,5 +1,5 @@
 import { Scene } from "phaser";
-import { Enemy } from "../entities/enemy";
+import { Enemy } from "../entities/enemies/enemy";
 export class Game extends Scene {
     constructor() {
         super("Game");
