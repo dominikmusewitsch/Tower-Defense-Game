@@ -1,5 +1,7 @@
 import { Scene } from "phaser";
-import { Enemy } from "../entities/enemies/enemy";
+
+import { Leafbug } from "../entities/enemies/leafbug/Leafbug";
+
 export class Game extends Scene {
     constructor() {
         super("Game");
@@ -58,8 +60,8 @@ export class Game extends Scene {
             delay: 1000,
             repeat: 9,
             callback: () => {
-                const enemy = new Enemy(this, this.path);
-                enemy.start();
+                const leafbug = new Leafbug(this, this.path);
+                leafbug.start();
             },
         });
 
