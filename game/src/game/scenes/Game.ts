@@ -1,6 +1,6 @@
 import { Scene } from "phaser";
 
-import { Leafbug } from "../entities/enemies/leafbug/Leafbug";
+import  {Leafbug}  from "../entities/enemies/leafbug/Leafbug";
 
 export class Game extends Scene {
     constructor() {
@@ -43,7 +43,7 @@ export class Game extends Scene {
                 0
             );
         }
-        
+
         const layerWaypoints = map.getObjectLayer("Waypoints");
         console.log(layerWaypoints);
         this.waypoints = layerWaypoints.objects[0].polyline;
@@ -56,6 +56,9 @@ export class Game extends Scene {
             this.path.lineTo(point.x, point.y);
         });
 
+
+
+        
         this.time.addEvent({
             delay: 1000,
             repeat: 9,

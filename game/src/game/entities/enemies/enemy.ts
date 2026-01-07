@@ -24,9 +24,9 @@ export abstract class Enemy extends Phaser.GameObjects.PathFollower {
 
         // Schaue welche Richtung dominanter ist
         if (absDy > absDx) {
-            return dy < 0 ? "Up" : "Down";
+            return dy < 0 ? "up" : "down";
         } else {
-            return dx < 0 ? "Left" : "Right";
+            return dx < 0 ? "left" : "right";
         }
     }
 
