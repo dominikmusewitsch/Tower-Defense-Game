@@ -1,7 +1,7 @@
 export class Tower extends Phaser.GameObjects.Container {
-    range = 1000;
-    fireRate = 1000;
-    damage = 2;
+    range = 200;
+    fireRate = 1200;
+    damage = 34;
 
     protected lastFired = 0;
     protected turret: Phaser.GameObjects.Sprite;
@@ -51,6 +51,17 @@ export class Tower extends Phaser.GameObjects.Container {
                 repeat: -1,
             });
         }
+        if (!anims.exists(`tower3projectile1-impact`)) {
+            anims.create({
+                key: `tower3projectile1-impact`,
+                frames: anims.generateFrameNumbers("tower3projectile1impact", {
+                    start: 0,
+                    end: 5,
+                }),
+                frameRate: 16,
+                repeat: 0,
+            });
+        }
     }
 
     update(
@@ -78,37 +89,47 @@ export class Tower extends Phaser.GameObjects.Container {
 
     protected shoot(target: any): void {
         this.turret.play(`tower3turret1-shoot`, true);
-        this.turret.on(
-            Phaser.Animations.Events.ANIMATION_UPDATE,
-            (
-                anim: Phaser.Animations.Animation,
-                frame: Phaser.Animations.AnimationFrame
-            ) => {
-                if (anim.key !== "tower3turret1-shoot") return;
+        const handler = (
+            anim: Phaser.Animations.Animation,
+            frame: Phaser.Animations.AnimationFrame
+        ) => {
+            if (anim.key !== "tower3turret1-shoot") return;
 
-                if (frame.index === 6) {
-                    this.spawnProjectile(target);
-                }
+            if (frame.index === 6) {
+                this.spawnProjectile(target);
+                this.turret.off(
+                    Phaser.Animations.Events.ANIMATION_UPDATE,
+                    handler
+                );
             }
-        );
-        target.hp -= this.damage;
-        console.log(`Target hit! HP left: ${target.hp}`);
+        };
+        this.turret.on(Phaser.Animations.Events.ANIMATION_UPDATE, handler);
     }
 
-    protected spawnProjectile(target:any): void {
+    protected spawnProjectile(target: any): void {
         const projectile = this.scene.add
             .sprite(this.x, this.y - 16, "tower3projectile1", 0)
             .setDepth(1);
         projectile.play("tower3projectile1-fly");
-   
-   this.scene.tweens.add({
+
+        this.scene.tweens.add({
             targets: projectile,
             x: target.x,
             y: target.y,
             duration: 300,
             onComplete: () => {
                 projectile.destroy();
+                const impact = this.scene.add
+                    .sprite(target.x, target.y, "tower3projectile1impact", 0)
+                    .setDepth(1);
+                impact.play("tower3projectile1-impact");
+                target.hp -= this.damage;
+                console.log(`Target hit! HP left: ${target.hp}`);
+                impact.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+                    impact.destroy();
+                });
             },
         });
+    }
 }
-}
+

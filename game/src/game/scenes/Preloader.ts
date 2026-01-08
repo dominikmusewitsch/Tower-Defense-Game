@@ -47,6 +47,10 @@ export class Preloader extends Scene {
             frameWidth: 10,
             frameHeight: 10,
         })  
+        this.load.spritesheet("tower3projectile1impact", "/towers/Tower03-Level01-Projectile-Impact.png", {
+            frameWidth: 64,
+            frameHeight: 64,
+        })
 
         //ENEMY GENERATION
         this.load.spritesheet("scorpion", "/enemies/scorpion/Scorpion.png", {

@@ -75,7 +75,6 @@ export class Game extends Scene {
     update() {
         this.enemies.forEach((enemy) => {enemy.update();
             if (enemy.hp <= 0) {
-                enemy.destroy();
                 this.enemies = this.enemies.filter((e) => e !== enemy);
             }
         });
