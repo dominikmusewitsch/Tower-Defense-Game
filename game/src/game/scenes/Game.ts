@@ -1,6 +1,7 @@
 import { Scene } from "phaser";
 import { Enemy } from "../entities/enemy";
 export class Game extends Scene {
+    enemies: Enemy[] = [];
     constructor() {
         super("Game");
     }
@@ -41,7 +42,7 @@ export class Game extends Scene {
                 0
             );
         }
-        
+
         const layerWaypoints = map.getObjectLayer("Waypoints");
         console.log(layerWaypoints);
         this.waypoints = layerWaypoints.objects[0].polyline;
@@ -60,12 +61,15 @@ export class Game extends Scene {
             callback: () => {
                 const enemy = new Enemy(this, this.path);
                 enemy.start();
+                this.enemies.push(enemy);
             },
         });
 
         this.add.image(224, 128, "tower3");
     }
 
-    update() {}
+    update() {
+        this.enemies.forEach((enemy) => enemy.update());
+    }
 }
 
