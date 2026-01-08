@@ -49,16 +49,8 @@ export class Preloader extends Scene {
         const mapData = this.cache.tilemap.get("mapOne");
         this.scene.start("Game");
 
-        const scorpionWalkRight = {
-            key: "scorpion-walk-right",
-            frames: this.anims.generateFrameNumbers("scorpion", {
-                frames: [16, 17, 18, 19, 20, 21, 22, 23],
-            }),
-            frameRate: 16,
-            repeat: -1,
-        };
-        const scorpionWalkLeft = {
-            key: "scorpion-walk-left",
+        const scorpionWalkSide = {
+            key: "scorpion-walk-side",
             frames: this.anims.generateFrameNumbers("scorpion", {
                 frames: [16, 17, 18, 19, 20, 21, 22, 23],
             }),
@@ -82,8 +74,7 @@ export class Preloader extends Scene {
             repeat: -1,
         };
 
-        this.anims.create(scorpionWalkRight);
-        this.anims.create(scorpionWalkLeft);
+        this.anims.create(scorpionWalkSide);
         this.anims.create(scorpionWalkDown);
         this.anims.create(scorpionWalkUp);
 

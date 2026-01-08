@@ -47,15 +47,15 @@ export class Enemy extends Phaser.GameObjects.PathFollower {
                 this.flipX = false;
             } else if (
                 direction === "left" &&
-                this.scene.anims.exists("scorpion-walk-left")
+                this.scene.anims.exists("scorpion-walk-side")
             ) {
-                this.play("scorpion-walk-left", true);
+                this.play("scorpion-walk-side", true);
                 this.flipX = false;
             } else if (
                 direction === "right" &&
-                this.scene.anims.exists("scorpion-walk-right")
+                this.scene.anims.exists("scorpion-walk-side")
             ) {
-                this.play("scorpion-walk-right", true);
+                this.play("scorpion-walk-side", true);
                 this.flipX = true;
             }
             this.lastDirection = direction;
