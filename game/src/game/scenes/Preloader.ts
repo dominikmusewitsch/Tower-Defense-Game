@@ -39,18 +39,30 @@ export class Preloader extends Scene {
             frameWidth: 64,
             frameHeight: 128,
         });
-        this.load.spritesheet("tower3turret1", "/towers/Tower03-Level_01-Turret.png", {
-            frameWidth: 96,
-            frameHeight: 96,
-        });
-        this.load.spritesheet("tower3projectile1", "/towers/Tower03-Level_01-Projectile.png", {
-            frameWidth: 10,
-            frameHeight: 10,
-        })  
-        this.load.spritesheet("tower3projectile1impact", "/towers/Tower03-Level01-Projectile-Impact.png", {
-            frameWidth: 64,
-            frameHeight: 64,
-        })
+        this.load.spritesheet(
+            "tower3turret1",
+            "/towers/Tower03-Level_01-Turret.png",
+            {
+                frameWidth: 96,
+                frameHeight: 96,
+            }
+        );
+        this.load.spritesheet(
+            "tower3projectile1",
+            "/towers/Tower03-Level_01-Projectile.png",
+            {
+                frameWidth: 10,
+                frameHeight: 10,
+            }
+        );
+        this.load.spritesheet(
+            "tower3projectile1impact",
+            "/towers/Tower03-Level01-Projectile-Impact.png",
+            {
+                frameWidth: 64,
+                frameHeight: 64,
+            }
+        );
 
         //ENEMY GENERATION
         this.load.spritesheet("scorpion", "/enemies/scorpion/Scorpion.png", {
@@ -58,6 +70,11 @@ export class Preloader extends Scene {
             frameHeight: 64,
         });
 
+        this.load.aseprite(
+            "leafbug",
+            "/enemies/leafbug/Leafbug.png",
+            "/enemies/leafbug/Leafbug.json"
+        );
     }
 
     create() {
