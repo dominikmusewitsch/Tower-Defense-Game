@@ -10,6 +10,8 @@ export class Game extends Scene {
         super("Game");
     }
     create() {
+
+
         const map = this.make.tilemap({
             key: "mapOne",
         });
@@ -77,17 +79,18 @@ export class Game extends Scene {
     update() {
         this.enemies = this.enemies.filter((enemy) => {
             enemy.update();
-            let dead = enemy.hp <= 0;
-            if (dead) {
+            if (enemy.isDead()) {
                 this.setMoney(this.money + enemy.moneyOnDeath);
             }
-            return !dead;
+            if( enemy.hasReachedEnd() && !enemy.isDead()) {
+                this.onBaseHealthChanged(enemy.damageToBase);
+                enemy.onDeath();
+            }
+            return !(enemy.isDead()|| enemy.hasReachedEnd());
         });
         this.towers.forEach((tower) => {
             tower.update(this.time.now, this.game.loop.delta, this.enemies);
         });
-        this.events.emit("money-changed", this.money);
-        this.events.emit("health-changed", this.health);
     }
 
     setMoney(value: number) {
@@ -98,6 +101,10 @@ export class Game extends Scene {
     setHealth(value: number) {
         this.health = value;
         this.events.emit("health-changed", this.health);
+    }
+
+    onBaseHealthChanged(damage: number) {
+        this.setHealth(this.health - damage);
     }
 }
 

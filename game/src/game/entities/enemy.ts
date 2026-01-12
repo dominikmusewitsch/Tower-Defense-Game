@@ -4,6 +4,7 @@ export class Enemy extends Phaser.GameObjects.PathFollower {
     maxHp = 100;
     hp = 100;
     moneyOnDeath = 10;
+    damageToBase = 10;
 
     lastDirection = "down";
     lastX: number;
@@ -108,7 +109,13 @@ export class Enemy extends Phaser.GameObjects.PathFollower {
     // Die Animationen werden jetzt zentral in der Game-Scene erstellt
 
     start() {
-        this.startFollow({ rotateToPath: false, duration: this.duration });
+        this.startFollow({ rotateToPath: false, duration: this.duration })
+        .on("complete", () => {
+            this.stopFollow();
+            // Enemy reached the end of the path
+            this.healthBar.destroy();
+            this.destroy();
+        });
     }
 
     updateHealthBar() {
@@ -193,6 +200,14 @@ export class Enemy extends Phaser.GameObjects.PathFollower {
 
         this.lastX = this.x;
         this.lastY = this.y;
+    }
+
+    isDead(): boolean {
+        return this.hp <= 0;
+    }
+
+    hasReachedEnd(): boolean {
+        return !this.isFollowing();
     }
 }
 
