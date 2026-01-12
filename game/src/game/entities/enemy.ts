@@ -56,6 +56,23 @@ export class Enemy extends Phaser.GameObjects.PathFollower {
         );
     }
 
+    takeDamage(amount: number) {
+        this.hp -= amount;
+        if (this.hp <= 0) {
+            this.onDeath();
+            return;
+        }
+        this.updateHealthBar();
+    }
+
+    onDeath() {
+        this.stopFollow();
+        // Optional: Hier könntest du eine Death-Animation abspielen, falls vorhanden
+        this.setVisible(false);
+        this.healthBar.destroy();
+        this.destroy();
+    }
+    
     update() {
         //Calculate direction
         const dx = this.x - this.lastX;
@@ -70,16 +87,6 @@ export class Enemy extends Phaser.GameObjects.PathFollower {
             this.flipAnimation = dx < 0;
         } else if (Math.abs(dy) > 0) {
             direction = dy > 0 ? "down" : "up";
-        }
-
-        // ON DEATH
-        if (this.hp <= 0) {
-            this.stopFollow();
-            // Optional: Hier könntest du eine Death-Animation abspielen, falls vorhanden
-            this.setVisible(false);
-            this.healthBar.destroy();
-            this.destroy();
-            return;
         }
 
         // Change animation if direction changed
