@@ -25,7 +25,6 @@ export class GameOver extends Scene {
             .setOrigin(0.5)
             .setInteractive({ useHandCursor: true })
             .on("pointerdown", () => {
-                this.scene.stop("UI");
                 this.scene.stop("GameOver");
                 this.scene.start("Game");
                 this.scene.launch("UI");

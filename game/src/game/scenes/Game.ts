@@ -6,6 +6,8 @@ export class Game extends Scene {
     towers: Tower[] = [];
     private money = 0;
     private health = 100;
+    private enemiesToSpawn = 10;
+    private enemiesSpawned = 0;
     constructor() {
         super("Game");
     }
@@ -25,9 +27,16 @@ export class Game extends Scene {
         });
         this.towers = [];
 
+        // Stop all timers and tweens
+        this.time.removeAllEvents();
+        this.tweens.killAll();
+
         // Reset game state
         this.money = 0;
         this.health = 100;
+
+        this.enemiesSpawned = 0;
+        this.enemiesToSpawn = 10;
     }
     create() {
         this.events.once("shutdown", () => {
@@ -91,11 +100,12 @@ export class Game extends Scene {
 
         this.time.addEvent({
             delay: 1000,
-            repeat: 9,
+            repeat: this.enemiesToSpawn - 1,
             callback: () => {
                 const enemy = new Enemy(this, this.path, "leafbug");
                 enemy.start();
                 this.enemies.push(enemy);
+                this.enemiesSpawned++;
             },
         });
         this.scene.launch("UI");
@@ -116,6 +126,7 @@ export class Game extends Scene {
         this.towers.forEach((tower) => {
             tower.update(this.time.now, this.game.loop.delta, this.enemies);
         });
+        this.checkWinCondition();
     }
 
     setMoney(value: number) {
@@ -137,6 +148,18 @@ export class Game extends Scene {
 
     onBaseHealthChanged(damage: number) {
         this.setHealth(this.health - damage);
+    }
+
+    checkWinCondition() {
+        const allEnemiesSpawned = this.enemiesSpawned === this.enemiesToSpawn;
+
+        const noEnemiesLeft = this.enemies.length === 0;
+
+        if (allEnemiesSpawned && noEnemiesLeft) {
+            this.scene.stop("UI");
+            this.scene.stop("Game");
+            this.scene.start("GameWon");
+        }
     }
 }
 
