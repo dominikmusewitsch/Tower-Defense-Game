@@ -4,6 +4,8 @@ import { Tower } from "../entities/tower";
 import {handleTowerBuild} from "../scripts/events/gameEvents";
 import handleMap1Init from "../scripts/maps/map1";
 import { GAME_CONFIG } from "../../config/gameConfig";
+import { Types } from "phaser";
+
 export class Game extends Scene {
     public enemies!: Phaser.GameObjects.Group;
     public towers!: Phaser.GameObjects.Group;
@@ -17,8 +19,10 @@ export class Game extends Scene {
     public buildingTowerSelectedCost: number;
     public buildPreview: Phaser.GameObjects.Image;
     public buildMode: boolean;
-    public towerPlacementClick: Phaser.Input.Events.PointerDownEvent;
+    public towerPlacementClick: Phaser.Input.Pointer;
     public layerBuildable: Phaser.Tilemaps.TilemapLayer;
+    public waypoints: Types.Math.Vector2Like[];
+    public path: Phaser.Curves.Path;
     constructor() {
         super("Game");
     }
