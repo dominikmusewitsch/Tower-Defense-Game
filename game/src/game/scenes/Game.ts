@@ -31,7 +31,6 @@ export class Game extends Scene {
         this._money = value;
         this.registry.set("money", this._money);
         this.events.emit("money-changed", this._money);
-        console.log("Money updated:", this._money);
     }
 
     cleanup() {
@@ -101,7 +100,6 @@ export class Game extends Scene {
         
 
         this.events.on("tower-selected", (towerId: string, cost: number) => {
-            console.log("Game scene received tower-selected:", towerId, cost);
             if (this.buildingTowerSelected === towerId) {
                 //Build Mode AUS
                 this.buildingTowerSelected = null;
@@ -223,7 +221,6 @@ export class Game extends Scene {
         this._money = value;
         this.registry.set("money", this._money);
         this.events.emit("money-changed", this._money);
-        console.log("Money updated:", this._money);
     }
 
     setHealth(value: number) {

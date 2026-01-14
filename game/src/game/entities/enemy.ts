@@ -165,7 +165,6 @@ export class Enemy extends Phaser.GameObjects.PathFollower {
         this.stopFollow();
         let deathAnim = `${this.ident}-death-${this.lastDirection}`;
         this.flipX = this.flipAnimation;
-        console.log("Playing death animation:", deathAnim);
         this.healthBar.setVisible(false);
         this.play(deathAnim);
 

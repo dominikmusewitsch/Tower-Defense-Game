@@ -28,7 +28,6 @@ export class Tower extends Phaser.GameObjects.Container {
             scene.selectedTower?.hideRange();
             scene.selectedTower = this;
             this.showRange();
-            console.log("Tower selected at:", this.x, this.y);
         });
         this.turret = scene.add.sprite(0, -16, "tower3turret1", 0);
         this.rangeCircle = scene.add.circle(
