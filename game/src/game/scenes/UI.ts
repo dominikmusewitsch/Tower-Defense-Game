@@ -1,4 +1,5 @@
 import { Scene } from "phaser";
+import { TowerButton } from "../ui/towerButton";
 
 export class UI extends Scene {
     moneyText!: Phaser.GameObjects.Text;
@@ -9,15 +10,23 @@ export class UI extends Scene {
     }
 
     create() {
+        this.moneyText = this.add.text(16, 16, `Gold: ${this.registry.get("money")}`);
+        this.healthText = this.add.text(16, 36, `HP: ${this.registry.get("health")}`);
         const gameScene = this.scene.get("Game");
-        this.moneyText = this.add.text(16, 16, "Gold: 0", {
-            fontSize: "16px",
-            color: "#ffffff",
+        const towerButtons = [
+            { id: "tower3", icon: "tower3", cost: 50 },
+            { id: "cannon", icon: "tower_cannon", cost: 100 },
+            { id: "ice", icon: "tower_ice", cost: 75 },
+        ];
+
+        towerButtons.forEach((t, i) => {
+            new TowerButton(this, 50, 120 + i * 72, t.icon, t.cost, t.id);
+            console.log("Created TowerButton for:", t.id);
         });
 
-        this.healthText = this.add.text(16, 36, "HP: 100", {
-            fontSize: "16px",
-            color: "#ffffff",
+        this.events.on("tower-selected", (id: string, cost: number) => {
+            console.log("UI scene emitted tower-selected:", id, cost);
+            gameScene.events.emit("tower-selected", id, cost);
         });
         let paused = false;
         const pauseButton = this.add
@@ -43,6 +52,7 @@ export class UI extends Scene {
             gameScene.events.off("money-changed", this.onMoneyChanged, this);
             gameScene.events.off("health-changed", this.onHealthChanged, this);
         });
+        console.log("UI scene created");
     }
 
     onMoneyChanged(money: number) {

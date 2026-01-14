@@ -4,20 +4,30 @@ import { Tower } from "../entities/tower";
 export class Game extends Scene {
     enemies!: Phaser.GameObjects.Group;
     towers!: Phaser.GameObjects.Group;
-    private money = 0;
+    private money = 200;
     private health = 100;
     private enemiesToSpawn = 10;
     private enemiesSpawned = 0;
+    private towerSelected: string | null = null;
+    private towerSelectedCost: number | null = null;
+    private buildMode = false;
+    towerPlacementClick: Phaser.Input.Events.PointerDownEvent | null = null;
     constructor() {
         super("Game");
     }
 
-
-
     create() {
         //Variable Init
-        this.money = 0;
+        this.money = 200;
         this.health = 100;
+
+        this.registry.set("money", this.money);
+        this.registry.set("health", this.health);
+
+        this.towerPlacementClick = null;
+        this.towerSelected = null;
+        this.towerSelectedCost = null;
+        this.buildMode = false;
 
         this.enemiesSpawned = 0;
         this.enemiesToSpawn = 10;
@@ -74,23 +84,24 @@ export class Game extends Scene {
             );
         }
         //Buildable Layer Init
+        let layerBuildable: Phaser.Tilemaps.TilemapLayer | null = null;
         if (tilesetSolidGreen) {
-            const layerBuildable = map.createLayer(
+            layerBuildable = map.createLayer(
                 "Buildable",
                 tilesetSolidGreen,
                 0,
                 0
             );
-            // Enable input for buildable layer
-            layerBuildable && layerBuildable.setInteractive();
+            // Disable visibility of buildable layer initially
+            layerBuildable && layerBuildable.setVisible(false);
 
             // Setup click handler for buildable tiles
             this.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
-                if (!layerBuildable?.active) return;
-
+                if (!this.buildMode) return;
                 const tile = layerBuildable.getTileAtWorldXY(
                     pointer.worldX,
-                    pointer.worldY
+                    pointer.worldY,
+                    true
                 );
 
                 if (tile && tile.index !== 0) {
@@ -103,12 +114,30 @@ export class Game extends Scene {
 
                     // Remove the buildable tile
                     layerBuildable.removeTileAt(tile.x, tile.y);
+                    this.towerSelected = null;
+                    layerBuildable.setVisible(false);
+                    this.buildMode = false;
+                    this.setMoney(this.money - (this.towerSelectedCost || 50));
                 }
             });
         }
+
+        this.events.on("tower-selected", (towerId: string, cost: number) => {
+            if (this.towerSelected === towerId) {
+                this.towerSelected = null;
+                layerBuildable && layerBuildable.setVisible(false);
+                this.buildMode = false;
+                this.towerSelectedCost = null;
+            } else {
+                this.towerSelected = towerId;
+                layerBuildable && layerBuildable.setVisible(true);
+                this.towerSelectedCost = cost;
+                this.buildMode = true;
+            }
+        });
+
         //Waypoints Init
         const layerWaypoints = map.getObjectLayer("Waypoints");
-        console.log(layerWaypoints);
         this.waypoints = layerWaypoints.objects[0].polyline;
         const startPoint = this.waypoints[1];
 
@@ -159,7 +188,9 @@ export class Game extends Scene {
 
     setMoney(value: number) {
         this.money = value;
+        this.registry.set("money", this.money);
         this.events.emit("money-changed", this.money);
+        console.log("Money updated:", this.money);
     }
 
     setHealth(value: number) {
@@ -182,8 +213,9 @@ export class Game extends Scene {
         const allEnemiesSpawned = this.enemiesSpawned >= this.enemiesToSpawn;
 
         const noEnemiesLeft =
-            (this.enemies.getChildren() as Enemy[]).filter((e: Enemy) => e.isAlive)
-                .length === 0;
+            (this.enemies.getChildren() as Enemy[]).filter(
+                (e: Enemy) => e.isAlive
+            ).length === 0;
 
         if (allEnemiesSpawned && noEnemiesLeft) {
             this.scene.stop("UI");

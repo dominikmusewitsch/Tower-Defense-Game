@@ -25,6 +25,7 @@ export class GameWon extends Scene {
             .on("pointerdown", () => {
                 this.scene.stop("GameWon");
                 this.scene.start("Game");
+                this
             });
 
         
