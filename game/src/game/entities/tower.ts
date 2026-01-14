@@ -1,6 +1,6 @@
 import { Enemy } from "./enemy";
 import { Game as GameScene } from "../scenes/Game";
-import { TowerConfig } from "../../config/TowerConfig";
+import { TowerConfig } from "../../config/towerConfig";
 
 export class Tower extends Phaser.GameObjects.Container {
     readonly config: TowerConfig;

@@ -1,4 +1,4 @@
-import { TOWER_CONFIGS, TowerType } from "../../config/TowerConfig";
+import { TOWER_CONFIGS, TowerType } from "../../config/towerConfig";
 
 export class TowerButton extends Phaser.GameObjects.Container {
     private _cost: number;

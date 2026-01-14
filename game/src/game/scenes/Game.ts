@@ -1,26 +1,24 @@
 import { Scene } from "phaser";
 import { Enemy } from "../entities/enemy";
 import { Tower } from "../entities/tower";
-import handleTowerBuild from "../scripts/TowerBuild";
-import handleMap1Init from "../scripts/init/maps/map1";
+import {handleTowerBuild} from "../scripts/events/gameEvents";
+import handleMap1Init from "../scripts/maps/map1";
+import { GAME_CONFIG } from "../../config/gameConfig";
 export class Game extends Scene {
-
-
-    enemies!: Phaser.GameObjects.Group;
-    towers!: Phaser.GameObjects.Group;
-    layerHighground!: Phaser.Tilemaps.TilemapLayer;
-    private _money = 200;
-    private health = 100;
-    private enemiesToSpawn = 10;
+    public enemies!: Phaser.GameObjects.Group;
+    public towers!: Phaser.GameObjects.Group;
+    public layerHighground!: Phaser.Tilemaps.TilemapLayer;
+    private _money: number;
+    private _health: number;
+    private enemiesToSpawn: number;
     private enemiesSpawned = 0;
     public selectedTower?: Tower;
-    public buildingTowerSelected: string | null = null;
-    public buildingTowerSelectedCost: number | null = null;
-    public buildPreview: Phaser.GameObjects.Image | null = null;
-    public buildMode = false;
-    public towerPlacementClick: Phaser.Input.Events.PointerDownEvent | null =
-        null;
-    public layerBuildable: Phaser.Tilemaps.TilemapLayer | null = null;
+    public buildingTowerSelected: string | null;
+    public buildingTowerSelectedCost: number;
+    public buildPreview: Phaser.GameObjects.Image;
+    public buildMode: boolean;
+    public towerPlacementClick: Phaser.Input.Events.PointerDownEvent;
+    public layerBuildable: Phaser.Tilemaps.TilemapLayer;
     constructor() {
         super("Game");
     }
@@ -31,6 +29,22 @@ export class Game extends Scene {
         this._money = value;
         this.registry.set("money", this._money);
         this.events.emit("money-changed", this._money);
+    }
+
+    get health() {
+        return this._health;
+    }
+
+    set health(value: number) {
+        this._health = value;
+        this.events.emit("health-changed", this._health);
+
+        if (this._health <= 0) {
+            // Stoppe Game und UI, starte GameOver-Screen
+            this.scene.stop("UI");
+            this.scene.stop("Game");
+            this.scene.start("GameOver");
+        }
     }
 
     cleanup() {
@@ -44,16 +58,12 @@ export class Game extends Scene {
             this.cleanup();
         });
         //Variable Init
-        this.money = 200;
-        this.health = 100;
+        this.money = GAME_CONFIG.startingMoney;
+        this.health = GAME_CONFIG.startingHealth;
 
-        this.registry.set("money", this._money);
+        this.registry.set("money", this.money);
         this.registry.set("health", this.health);
 
-        this.buildPreview = null;
-        this.towerPlacementClick = null;
-        this.buildingTowerSelected = null;
-        this.buildingTowerSelectedCost = null;
         this.buildMode = false;
 
         this.enemiesSpawned = 0;
@@ -73,31 +83,29 @@ export class Game extends Scene {
         //Map Init
         handleMap1Init(this);
 
-            // Setup click handler for buildable tiles12
-            this.input.on(
-                "pointerdown",
-                (
-                    pointer: Phaser.Input.Pointer,
-                    gameObjects: Phaser.GameObjects.GameObject[]
-                ) => {
-                    //1️⃣ Ignore clicks on GameObjects thile not in Build Mode
-                    if (gameObjects.length > 0 && this.buildMode === false) {
-                        return;
-                    }
-                    //2️⃣ Build Mode check - build selected Tower
-
-                    if (this.buildMode) {
-                        handleTowerBuild(this, pointer);
-                    }
-
-                    // 3️⃣ Click on nothing in particular or while in Build Mode - Deselect Tower
-                    this.selectedTower?.hideRange();
-                    this.selectedTower = undefined;
-                    if (buildRangeIndicator)
-                        buildRangeIndicator.setVisible(false);
+        // Setup click handler for buildable tiles12
+        this.input.on(
+            "pointerdown",
+            (
+                pointer: Phaser.Input.Pointer,
+                gameObjects: Phaser.GameObjects.GameObject[]
+            ) => {
+                //1️⃣ Ignore clicks on GameObjects thile not in Build Mode
+                if (gameObjects.length > 0 && this.buildMode === false) {
+                    return;
                 }
-            );
-        
+                //2️⃣ Build Mode check - build selected Tower
+
+                if (this.buildMode) {
+                    handleTowerBuild(this, pointer);
+                }
+
+                // 3️⃣ Click on nothing in particular or while in Build Mode - Deselect Tower
+                this.selectedTower?.hideRange();
+                this.selectedTower = undefined;
+                if (buildRangeIndicator) buildRangeIndicator.setVisible(false);
+            }
+        );
 
         this.events.on("tower-selected", (towerId: string, cost: number) => {
             if (this.buildingTowerSelected === towerId) {
@@ -105,7 +113,6 @@ export class Game extends Scene {
                 this.buildingTowerSelected = null;
                 this.layerBuildable && this.layerBuildable.setVisible(false);
                 this.buildMode = false;
-                this.buildingTowerSelectedCost = null;
                 this.buildPreview?.setVisible(false);
                 return;
             }
@@ -125,7 +132,6 @@ export class Game extends Scene {
                 .setDepth(2);
         });
 
-        
         //Build Preview Event Listener
         let buildRangeIndicator: Phaser.GameObjects.Graphics | null = null;
         this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
@@ -177,7 +183,7 @@ export class Game extends Scene {
         });
 
         //Waypoints Init
-      
+
         //Enemy Spawn Init
         this.time.addEvent({
             delay: 1000,
@@ -199,7 +205,7 @@ export class Game extends Scene {
             enemy.update();
 
             if (!enemy.isAlive && enemy.isWorthMoney) {
-                this.setMoney(this._money + enemy.moneyOnDeath);
+                this.money = this.money + enemy.moneyOnDeath;
                 enemy.isWorthMoney = false;
             }
 
@@ -217,26 +223,8 @@ export class Game extends Scene {
         this.checkWinCondition();
     }
 
-    setMoney(value: number) {
-        this._money = value;
-        this.registry.set("money", this._money);
-        this.events.emit("money-changed", this._money);
-    }
-
-    setHealth(value: number) {
-        this.health = value;
-        this.events.emit("health-changed", this.health);
-
-        if (this.health <= 0) {
-            // Stoppe Game und UI, starte GameOver-Screen
-            this.scene.stop("UI");
-            this.scene.stop("Game");
-            this.scene.start("GameOver");
-        }
-    }
-
     onBaseHealthChanged(damage: number) {
-        this.setHealth(this.health - damage);
+        this.health = this.health - damage;
     }
 
     checkWinCondition() {

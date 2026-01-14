@@ -1,4 +1,4 @@
-import { Game } from "../../../scenes/Game";
+import { Game } from "../../scenes/Game";
 
 export default function handleMap1Init(scene: Game) {
     // Map 1 specific initialization code can go here
@@ -29,7 +29,6 @@ export default function handleMap1Init(scene: Game) {
         const layerWater = map.createLayer("Terrain_Water", tilesetWater, 0, 0);
     }
     //Buildable Layer Init
-    scene.layerBuildable = null;
     if (tilesetSolidGreen) {
         scene.layerBuildable = map.createLayer(
             "Buildable",
@@ -59,3 +58,4 @@ export default function handleMap1Init(scene: Game) {
         });
     }
 }
+

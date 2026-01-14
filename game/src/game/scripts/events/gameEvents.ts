@@ -1,7 +1,9 @@
-import { Game } from "../scenes/Game";
-import { Tower } from "../entities/tower";
-import { TOWER_CONFIGS, TowerType } from "../../config/TowerConfig";
-export default function handleTowerBuild(
+import { Game } from "../../scenes/Game";
+import { Tower } from "../../entities/tower";
+import { TOWER_CONFIGS, TowerType } from "../../../config/towerConfig";
+
+
+export function handleTowerBuild(
     scene: Game,
     pointer: Phaser.Input.Pointer
 ) {
@@ -23,12 +25,10 @@ export default function handleTowerBuild(
         scene.money = scene.money - (scene.buildingTowerSelectedCost || 50);
 
         // Build Mode beenden
-        scene.buildMode = false;
         scene.buildingTowerSelected = null;
-        scene.buildingTowerSelectedCost = null;
+        scene.buildMode = false;
         scene.layerBuildable?.setVisible(false);
         scene.buildPreview?.destroy();
-        scene.buildPreview = null;
     }
 }
 
