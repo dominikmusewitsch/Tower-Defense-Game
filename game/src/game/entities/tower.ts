@@ -3,7 +3,7 @@ import { Enemy } from "./enemy";
 export class Tower extends Phaser.GameObjects.Container {
     range = 200;
     fireRate = 1200;
-    damage = 20;
+    damage = 50;
 
     protected lastFired = 0;
     protected turret: Phaser.GameObjects.Sprite;

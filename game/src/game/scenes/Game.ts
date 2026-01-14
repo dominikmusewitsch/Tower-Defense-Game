@@ -4,20 +4,41 @@ import { Tower } from "../entities/tower";
 export class Game extends Scene {
     enemies!: Phaser.GameObjects.Group;
     towers!: Phaser.GameObjects.Group;
-    private money = 0;
+    private money = 200;
     private health = 100;
     private enemiesToSpawn = 10;
     private enemiesSpawned = 0;
+    private towerSelected: string | null = null;
+    private towerSelectedCost: number | null = null;
+    private buildPreview: Phaser.GameObjects.Image | null = null;
+    private buildMode = false;
+    towerPlacementClick: Phaser.Input.Events.PointerDownEvent | null = null;
     constructor() {
         super("Game");
     }
 
-
+    cleanup() {
+        this.events.off("money-changed");
+        this.events.off("health-changed");
+        this.events.off("tower-selected");
+    }
 
     create() {
+        this.events.once("shutdown", () => {
+            this.cleanup();
+        });
         //Variable Init
-        this.money = 0;
+        this.money = 200;
         this.health = 100;
+
+        this.registry.set("money", this.money);
+        this.registry.set("health", this.health);
+
+        this.buildPreview = null;
+        this.towerPlacementClick = null;
+        this.towerSelected = null;
+        this.towerSelectedCost = null;
+        this.buildMode = false;
 
         this.enemiesSpawned = 0;
         this.enemiesToSpawn = 10;
@@ -74,41 +95,96 @@ export class Game extends Scene {
             );
         }
         //Buildable Layer Init
+        let layerBuildable: Phaser.Tilemaps.TilemapLayer | null = null;
         if (tilesetSolidGreen) {
-            const layerBuildable = map.createLayer(
+            layerBuildable = map.createLayer(
                 "Buildable",
                 tilesetSolidGreen,
                 0,
                 0
             );
-            // Enable input for buildable layer
-            layerBuildable && layerBuildable.setInteractive();
+            // Disable visibility of buildable layer initially
+            layerBuildable && layerBuildable.setVisible(false);
 
             // Setup click handler for buildable tiles
             this.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
-                if (!layerBuildable?.active) return;
-
+                if (!this.buildMode) return;
                 const tile = layerBuildable.getTileAtWorldXY(
                     pointer.worldX,
-                    pointer.worldY
+                    pointer.worldY,
+                    false
                 );
 
                 if (tile && tile.index !== 0) {
-                    // Place tower at tile position
                     const towerX = tile.getCenterX();
                     const towerY = tile.getCenterY() - 32;
 
                     const tower = new Tower(this, towerX, towerY);
                     this.towers.add(tower);
 
-                    // Remove the buildable tile
                     layerBuildable.removeTileAt(tile.x, tile.y);
+
+                    this.setMoney(this.money - (this.towerSelectedCost || 50));
+
+                    // Build Mode beenden
+                    this.buildMode = false;
+                    this.towerSelected = null;
+                    this.towerSelectedCost = null;
+                    layerBuildable.setVisible(false);
+
+                    this.buildPreview?.destroy();
+                    this.buildPreview = undefined;
                 }
             });
         }
+
+        this.events.on("tower-selected", (towerId: string, cost: number) => {
+            console.log("Game scene received tower-selected:", towerId, cost);
+            if (this.towerSelected === towerId) {
+                //Build Mode AUS
+                this.towerSelected = null;
+                layerBuildable && layerBuildable.setVisible(false);
+                this.buildMode = false;
+                this.towerSelectedCost = null;
+                this.buildPreview?.setVisible(false);
+                return;
+            }
+            //BUILD MODE AN
+            this.towerSelected = towerId;
+            layerBuildable?.setVisible(true);
+            this.towerSelectedCost = cost;
+            this.buildMode = true;
+            this.buildPreview?.destroy();
+            this.buildPreview = this.add
+                .image(0, 0, towerId)
+                .setAlpha(0.5)
+                .setDepth(2);
+        });
+
+        //Build Preview Event Listener
+        this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
+            if (!this.buildMode || !layerBuildable || !this.buildPreview)
+                return;
+
+            const tile = layerBuildable.getTileAtWorldXY(
+                pointer.worldX,
+                pointer.worldY
+            );
+
+            if (!tile || tile.index === 0) {
+                this.buildPreview.setVisible(false);
+                return;
+            }
+
+            this.buildPreview.setVisible(true);
+            this.buildPreview.setPosition(
+                tile.getCenterX(),
+                tile.getCenterY() - 32
+            );
+        });
+
         //Waypoints Init
         const layerWaypoints = map.getObjectLayer("Waypoints");
-        console.log(layerWaypoints);
         this.waypoints = layerWaypoints.objects[0].polyline;
         const startPoint = this.waypoints[1];
 
@@ -159,7 +235,9 @@ export class Game extends Scene {
 
     setMoney(value: number) {
         this.money = value;
+        this.registry.set("money", this.money);
         this.events.emit("money-changed", this.money);
+        console.log("Money updated:", this.money);
     }
 
     setHealth(value: number) {
@@ -182,8 +260,9 @@ export class Game extends Scene {
         const allEnemiesSpawned = this.enemiesSpawned >= this.enemiesToSpawn;
 
         const noEnemiesLeft =
-            (this.enemies.getChildren() as Enemy[]).filter((e: Enemy) => e.isAlive)
-                .length === 0;
+            (this.enemies.getChildren() as Enemy[]).filter(
+                (e: Enemy) => e.isAlive
+            ).length === 0;
 
         if (allEnemiesSpawned && noEnemiesLeft) {
             this.scene.stop("UI");
