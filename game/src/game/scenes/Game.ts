@@ -16,7 +16,16 @@ export class Game extends Scene {
         super("Game");
     }
 
+    cleanup() {
+        this.events.off("money-changed");
+        this.events.off("health-changed");
+        this.events.off("tower-selected");
+    }
+
     create() {
+        this.events.once("shutdown", () => {
+            this.cleanup();
+        });
         //Variable Init
         this.money = 200;
         this.health = 100;
@@ -123,6 +132,7 @@ export class Game extends Scene {
         }
 
         this.events.on("tower-selected", (towerId: string, cost: number) => {
+            console.log("Game scene received tower-selected:", towerId, cost);
             if (this.towerSelected === towerId) {
                 this.towerSelected = null;
                 layerBuildable && layerBuildable.setVisible(false);

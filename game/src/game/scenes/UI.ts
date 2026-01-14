@@ -9,9 +9,28 @@ export class UI extends Scene {
         super({ key: "UI", active: false });
     }
 
+    cleanup() {
+        const gameScene = this.scene.get("Game");
+        gameScene.events.off("money-changed", this.onMoneyChanged, this);
+        gameScene.events.off("health-changed", this.onHealthChanged, this);
+        this.events.off("tower-selected");
+    }
+
     create() {
-        this.moneyText = this.add.text(16, 16, `Gold: ${this.registry.get("money")}`);
-        this.healthText = this.add.text(16, 36, `HP: ${this.registry.get("health")}`);
+        this.events.once("shutdown", () => {
+            this.cleanup();
+        });
+
+        this.moneyText = this.add.text(
+            16,
+            16,
+            `Gold: ${this.registry.get("money")}`
+        );
+        this.healthText = this.add.text(
+            16,
+            36,
+            `HP: ${this.registry.get("health")}`
+        );
         const gameScene = this.scene.get("Game");
         const towerButtons = [
             { id: "tower3", icon: "tower3", cost: 50 },
@@ -25,7 +44,7 @@ export class UI extends Scene {
         });
 
         this.events.on("tower-selected", (id: string, cost: number) => {
-            console.log("UI scene emitted tower-selected:", id, cost);
+            console.log("UI scene recieved tower-selected:", id, cost);
             gameScene.events.emit("tower-selected", id, cost);
         });
         let paused = false;
@@ -48,14 +67,11 @@ export class UI extends Scene {
         gameScene.events.on("money-changed", this.onMoneyChanged, this);
         gameScene.events.on("health-changed", this.onHealthChanged, this);
 
-        this.events.once("shutdown", () => {
-            gameScene.events.off("money-changed", this.onMoneyChanged, this);
-            gameScene.events.off("health-changed", this.onHealthChanged, this);
-        });
         console.log("UI scene created");
     }
 
     onMoneyChanged(money: number) {
+        console.log("UI scene updating money display:", money);
         this.moneyText.setText(`Gold: ${money}`);
     }
 
