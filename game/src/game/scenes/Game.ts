@@ -147,6 +147,8 @@ export class Game extends Scene {
                     // 3️⃣ Click on nothing in particular or while in Build Mode - Deselect Tower
                     this.selectedTower?.hideRange();
                     this.selectedTower = undefined;
+                    if (buildRangeIndicator)
+                        buildRangeIndicator.setVisible(false);
                 }
             );
         }
@@ -165,6 +167,7 @@ export class Game extends Scene {
             //Deselect currently selected tower
             this.selectedTower?.hideRange();
             this.selectedTower = undefined;
+
             //BUILD MODE AN
             this.buildingTowerSelected = towerId;
             this.layerBuildable?.setVisible(true);
@@ -176,6 +179,8 @@ export class Game extends Scene {
                 .setAlpha(0.5)
                 .setDepth(2);
         });
+
+        let buildRangeIndicator: Phaser.GameObjects.Graphics | null = null;
 
         //Build Preview Event Listener
         this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
@@ -189,6 +194,7 @@ export class Game extends Scene {
 
             if (!tile || tile.index === 0) {
                 this.buildPreview.setVisible(false);
+                if (buildRangeIndicator) buildRangeIndicator.setVisible(false);
                 return;
             }
 
@@ -197,6 +203,32 @@ export class Game extends Scene {
                 tile.getCenterX(),
                 tile.getCenterY() - 32
             );
+
+            // Range-Kreis anzeigen
+            if (!buildRangeIndicator) {
+                buildRangeIndicator = this.add.graphics();
+                buildRangeIndicator.setDepth(10);
+            }
+            buildRangeIndicator.clear();
+            buildRangeIndicator.fillStyle(0x00ff00, 0.25);
+            // Default-Range wie im Tower
+            let range = 200;
+            if (
+                this.layerHighground &&
+                this.layerHighground.getTileAtWorldXY(
+                    tile.getCenterX(),
+                    tile.getCenterY() - 32,
+                    false
+                ) !== null
+            ) {
+                range = range * 1.5;
+            }
+            buildRangeIndicator.fillCircle(
+                tile.getCenterX(),
+                tile.getCenterY() - 32,
+                range
+            );
+            buildRangeIndicator.setVisible(true);
         });
 
         //Waypoints Init
