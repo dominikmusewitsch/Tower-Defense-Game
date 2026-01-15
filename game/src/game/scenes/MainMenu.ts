@@ -45,11 +45,9 @@ export default class MainMenu extends Phaser.Scene {
         const { width, height } = this.scale;
 
         // Hintergrundbild einfügen (background.png, muss im Preloader geladen sein)
-        // Hintergrundbild auf volle Scene-Größe skalieren
         this.add
             .image(width / 2, height / 2, "background")
             .setOrigin(0.5)
-            .setDisplaySize(width, height)
             .setDepth(0);
 
         // Animations-Setups für alle Käfer (nur einmalig! Frames anpassen!)
