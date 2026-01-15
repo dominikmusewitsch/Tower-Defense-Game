@@ -1,7 +1,11 @@
 import { Scene } from "phaser";
 import { Enemy } from "../entities/enemy";
 import { Tower } from "../entities/tower";
-import {handleTowerBuild} from "../scripts/events/gameEvents";
+import {
+    setupPointerDownHandler,
+    setupPointerMoveHandler,
+    setupTowerSelectedHandler,
+} from "../scripts/events/gameEvents";
 import handleMap1Init from "../scripts/maps/map1";
 import { GAME_CONFIG } from "../../config/gameConfig";
 import { Types } from "phaser";
@@ -23,6 +27,7 @@ export class Game extends Scene {
     public layerBuildable: Phaser.Tilemaps.TilemapLayer;
     public waypoints: Types.Math.Vector2Like[];
     public path: Phaser.Curves.Path;
+    private _buildRangeIndicator: Phaser.GameObjects.Graphics | null = null;
     constructor() {
         super("Game");
     }
@@ -49,6 +54,13 @@ export class Game extends Scene {
             this.scene.stop("Game");
             this.scene.start("GameOver");
         }
+    }
+    get buildRangeIndicator() {
+        return this._buildRangeIndicator;
+    }
+
+    set buildRangeIndicator(value) {
+        this._buildRangeIndicator = value;
     }
 
     cleanup() {
@@ -84,109 +96,18 @@ export class Game extends Scene {
             runChildUpdate: false,
         });
 
-        //Map Init
+        //Map and Waypoint Init
         handleMap1Init(this);
 
         // Setup click handler for buildable tiles12
-        this.input.on(
-            "pointerdown",
-            (
-                pointer: Phaser.Input.Pointer,
-                gameObjects: Phaser.GameObjects.GameObject[]
-            ) => {
-                //1️⃣ Ignore clicks on GameObjects thile not in Build Mode
-                if (gameObjects.length > 0 && this.buildMode === false) {
-                    return;
-                }
-                //2️⃣ Build Mode check - build selected Tower
+        setupPointerDownHandler(this);
 
-                if (this.buildMode) {
-                    handleTowerBuild(this, pointer);
-                }
+        // Setup UI Event listener for building Tower selected
+        setupTowerSelectedHandler(this);
 
-                // 3️⃣ Click on nothing in particular or while in Build Mode - Deselect Tower
-                this.selectedTower?.hideRange();
-                this.selectedTower = undefined;
-                if (buildRangeIndicator) buildRangeIndicator.setVisible(false);
-            }
-        );
+        //Setup Build Preview Event Listener
+        setupPointerMoveHandler(this);
 
-        this.events.on("tower-selected", (towerId: string, cost: number) => {
-            if (this.buildingTowerSelected === towerId) {
-                //Build Mode AUS
-                this.buildingTowerSelected = null;
-                this.layerBuildable && this.layerBuildable.setVisible(false);
-                this.buildMode = false;
-                this.buildPreview?.setVisible(false);
-                return;
-            }
-            //Deselect currently selected tower
-            this.selectedTower?.hideRange();
-            this.selectedTower = undefined;
-
-            //BUILD MODE AN
-            this.buildingTowerSelected = towerId;
-            this.layerBuildable?.setVisible(true);
-            this.buildingTowerSelectedCost = cost;
-            this.buildMode = true;
-            this.buildPreview?.destroy();
-            this.buildPreview = this.add
-                .image(0, 0, towerId)
-                .setAlpha(0.5)
-                .setDepth(2);
-        });
-
-        //Build Preview Event Listener
-        let buildRangeIndicator: Phaser.GameObjects.Graphics | null = null;
-        this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
-            if (!this.buildMode || !this.layerBuildable || !this.buildPreview)
-                return;
-
-            const tile = this.layerBuildable.getTileAtWorldXY(
-                pointer.worldX,
-                pointer.worldY
-            );
-
-            if (!tile || tile.index === 0) {
-                this.buildPreview.setVisible(false);
-                if (buildRangeIndicator) buildRangeIndicator.setVisible(false);
-                return;
-            }
-
-            this.buildPreview.setVisible(true);
-            this.buildPreview.setPosition(
-                tile.getCenterX(),
-                tile.getCenterY() - 32
-            );
-
-            // Range-Kreis anzeigen
-            if (!buildRangeIndicator) {
-                buildRangeIndicator = this.add.graphics();
-                buildRangeIndicator.setDepth(10);
-            }
-            buildRangeIndicator.clear();
-            buildRangeIndicator.fillStyle(0x00ff00, 0.25);
-            // Default-Range wie im Tower
-            let range = 200;
-            if (
-                this.layerHighground &&
-                this.layerHighground.getTileAtWorldXY(
-                    tile.getCenterX(),
-                    tile.getCenterY() - 32,
-                    false
-                ) !== null
-            ) {
-                range = range * 1.5;
-            }
-            buildRangeIndicator.fillCircle(
-                tile.getCenterX(),
-                tile.getCenterY() - 32,
-                range
-            );
-            buildRangeIndicator.setVisible(true);
-        });
-
-        //Waypoints Init
 
         //Enemy Spawn Init
         this.time.addEvent({
