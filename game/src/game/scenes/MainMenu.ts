@@ -165,7 +165,7 @@ export default class MainMenu extends Phaser.Scene {
                         this.beetles.forEach((b, j) => {
                             this.tweens.add({
                                 targets: b,
-                                x: -100 - j * beetleSpacing,
+                                x: -200 + j * beetleSpacing,
                                 duration: 800,
                                 delay: j * 100,
                                 onComplete: () => {
