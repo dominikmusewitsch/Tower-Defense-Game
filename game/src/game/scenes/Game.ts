@@ -9,6 +9,8 @@ import {
 import handleMap1Init from "../scripts/maps/map1";
 import { GAME_CONFIG } from "../../config/gameConfig";
 import { Types } from "phaser";
+import { Leafbug } from "../entities/enemies/leafbug";
+import { Scorpion } from "../entities/enemies/scorpion";
 
 export class Game extends Scene {
     public enemies!: Phaser.GameObjects.Group;
@@ -108,18 +110,22 @@ export class Game extends Scene {
         //Setup Build Preview Event Listener
         setupPointerMoveHandler(this);
 
-
         //Enemy Spawn Init
         this.time.addEvent({
             delay: 1000,
-            repeat: this.enemiesToSpawn - 1,
+            repeat: this.enemiesToSpawn - 2,
             callback: () => {
-                const enemy = new Enemy(this, this.path, "leafbug");
+                const enemy = new Leafbug(this, this.path);
                 enemy.start();
                 this.enemies.add(enemy);
                 this.enemiesSpawned++;
             },
         });
+        const enemy = new Scorpion(this, this.path);
+        enemy.start();
+        this.enemies.add(enemy);
+        this.enemiesSpawned++;
+
         this.scene.launch("UI");
     }
 
