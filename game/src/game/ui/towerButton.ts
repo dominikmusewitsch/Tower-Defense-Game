@@ -25,7 +25,7 @@ export class TowerButton extends Phaser.GameObjects.Container {
             .setStrokeStyle(2, 0xffffff)
             .setAlpha(0.7)
             .setInteractive()
-            .on("pointerdown", (pointer) => {
+            .on("pointerdown", (pointer: Phaser.Input.Pointer) => {
                 if (this.canAfford) {
                     if (!(scene.scene.get("Game") as Game).buildMode && pointer.button === 2) {
                         return;
