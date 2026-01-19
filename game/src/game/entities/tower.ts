@@ -32,14 +32,14 @@ export class Tower extends Phaser.GameObjects.Container {
         this.turret = scene.add.sprite(0, -16, "tower3turret1", 0);
         this.rangeCircle = scene.add.circle(
             0, // x relativ zum Tower
-            0, // y relativ zum Tower
+            32, // y relativ zum Tower (offset to account for tower visual position)
             this.range, // Radius
             0x00ff00, // Farbe (grün)
             0.25 // Alpha (transparent)
         );
-        this.rangeCircle.setVisible(false);
+        this.rangeCircle.setVisible(false).setDepth(9999); // Always render on top, independent of y position
         this.createAnimations();
-        this.add([towerBase, this.turret, this.rangeCircle]);
+        this.add([towerBase, this.turret]);
         this.updateDepth();
     }
 
@@ -56,6 +56,7 @@ export class Tower extends Phaser.GameObjects.Container {
     }
 
     showRange() {
+        this.rangeCircle.setPosition(this.x, this.y + 32);
         this.rangeCircle.setVisible(true);
     }
 
@@ -131,8 +132,12 @@ export class Tower extends Phaser.GameObjects.Container {
             .getChildren()
             .find(
                 (e: Enemy) =>
-                    Phaser.Math.Distance.Between(this.x, this.y, e.x, e.y) <=
-                        this.range && e.isAlive
+                    Phaser.Math.Distance.Between(
+                        this.x,
+                        this.y + 32,
+                        e.x,
+                        e.y
+                    ) <= this.range && e.isAlive
             );
     }
 

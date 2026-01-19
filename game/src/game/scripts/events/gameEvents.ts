@@ -106,7 +106,7 @@ export function setupPointerMoveHandler(scene: any) {
         // Range-Kreis anzeigen
         if (!scene.buildRangeIndicator) {
             scene.buildRangeIndicator = scene.add.graphics();
-            scene.buildRangeIndicator.setDepth(10);
+            scene.buildRangeIndicator.setDepth(9999);
         }
         scene.buildRangeIndicator.clear();
         scene.buildRangeIndicator.fillStyle(0x00ff00, 0.25);
@@ -124,7 +124,7 @@ export function setupPointerMoveHandler(scene: any) {
         }
         scene.buildRangeIndicator.fillCircle(
             tile.getCenterX(),
-            tile.getCenterY() - 32,
+            tile.getCenterY(),
             range
         );
         scene.buildRangeIndicator.setVisible(true);
