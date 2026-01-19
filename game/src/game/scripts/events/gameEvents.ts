@@ -35,6 +35,20 @@ export function setupPointerDownHandler(scene: Game) {
             pointer: Phaser.Input.Pointer,
             gameObjects: Phaser.GameObjects.GameObject[]
         ) => {
+            // Right-click: always deselect and suppress context menu
+            if (pointer.button === 2) {
+                scene.selectedTower?.hideRange();
+                scene.selectedTower = undefined;
+                if (scene.buildRangeIndicator)
+                    scene.buildRangeIndicator.setVisible(false);
+                scene.buildMode = false;
+                scene.buildingTowerSelected = null;
+                scene.layerBuildable && scene.layerBuildable.setVisible(false);
+                scene.buildPreview?.setVisible(false);
+                return;
+            }
+
+            // Left-click (button 0) logic
             //1️⃣ Ignore clicks on GameObjects while not in Build Mode
             if (gameObjects.length > 0 && scene.buildMode === false) {
                 return;

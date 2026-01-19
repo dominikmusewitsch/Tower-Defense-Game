@@ -23,6 +23,11 @@ export class Preloader extends Scene {
     }
 
     preload() {
+        // Suppress context menu on right-click
+        this.game.canvas.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+        });
+
         this.cache.json.add("worlds", worldsData);
         //  Load the assets for the game - Replace with your own assets
         this.load.setPath("assets");
@@ -88,27 +93,37 @@ export class Preloader extends Scene {
             frameHeight: 96,
         });
 
-        this.load.spritesheet("magmacrab", "/enemies/magmacrab/Magmacrab.png", {    
+        this.load.spritesheet("magmacrab", "/enemies/magmacrab/Magmacrab.png", {
             frameWidth: 64,
             frameHeight: 64,
-        }
+        });
+
+        this.load.spritesheet(
+            "clampbeetle",
+            "/enemies/clampbeetle/Clampbeetle.png",
+            {
+                frameWidth: 64,
+                frameHeight: 64,
+            }
         );
 
-        this.load.spritesheet("clampbeetle", "/enemies/clampbeetle/Clampbeetle.png", {
-            frameWidth: 64,
-            frameHeight: 64,
-        });
+        this.load.spritesheet(
+            "flyinglocust",
+            "/enemies/flyinglocust/FlyingLocust.png",
+            {
+                frameWidth: 64,
+                frameHeight: 64,
+            }
+        );
 
-        this.load.spritesheet("flyinglocust", "/enemies/flyinglocust/FlyingLocust.png", {
-            frameWidth: 64,
-            frameHeight: 64,
-        }); 
-
-        this.load.spritesheet("voidbutterfly", "/enemies/voidbutterfly/Voidbutterfly.png", {
-            frameWidth: 64,
-            frameHeight: 64,
-        });
-
+        this.load.spritesheet(
+            "voidbutterfly",
+            "/enemies/voidbutterfly/Voidbutterfly.png",
+            {
+                frameWidth: 64,
+                frameHeight: 64,
+            }
+        );
     }
 
     create() {
