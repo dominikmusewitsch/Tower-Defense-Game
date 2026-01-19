@@ -153,6 +153,11 @@ export class Tower extends Phaser.GameObjects.Container {
             }
         };
         this.turret.on(Phaser.Animations.Events.ANIMATION_UPDATE, handler);
+        
+        // Reset to first frame after animation completes
+        this.turret.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+            this.turret.setFrame(0);
+        });
     }
 
     protected spawnProjectile(target: any): void {
