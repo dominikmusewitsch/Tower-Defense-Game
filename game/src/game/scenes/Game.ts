@@ -137,12 +137,13 @@ export class Game extends Scene {
 
             enemy.update();
 
-            if (!enemy.isAlive && enemy.isWorthMoney) {
+            if (!enemy.isAlive && enemy.isWorthMoney && !enemy.hasReachedEnd()) {
                 this.money += enemy.moneyOnDeath;
                 enemy.isWorthMoney = false;
             }
 
             if (enemy.hasReachedEnd() && enemy.isAlive) {
+                enemy.isWorthMoney = false;
                 this.onBaseHealthChanged(enemy.damageToBase);
                 enemy.onDeath();
             }
