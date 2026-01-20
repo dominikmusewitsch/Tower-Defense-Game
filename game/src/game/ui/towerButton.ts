@@ -1,4 +1,5 @@
 import { TOWER_CONFIGS, TowerType } from "../../config/towerConfig";
+import { Game } from "../scenes/Game";
 
 export class TowerButton extends Phaser.GameObjects.Container {
     private _cost: number;
@@ -24,9 +25,13 @@ export class TowerButton extends Phaser.GameObjects.Container {
             .setStrokeStyle(2, 0xffffff)
             .setAlpha(0.7)
             .setInteractive()
-            .on("pointerdown", () => {
+            .on("pointerdown", (pointer: Phaser.Input.Pointer) => {
                 if (this.canAfford) {
+                    if (!(scene.scene.get("Game") as Game).buildMode && pointer.button === 2) {
+                        return;
+                    }
                     scene.events.emit("tower-selected", towerId);
+    
                 }
             })
             .on("pointerover", () => {

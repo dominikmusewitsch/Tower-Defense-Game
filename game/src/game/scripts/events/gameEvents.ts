@@ -35,6 +35,20 @@ export function setupPointerDownHandler(scene: Game) {
             pointer: Phaser.Input.Pointer,
             gameObjects: Phaser.GameObjects.GameObject[]
         ) => {
+            // Right-click: always deselect and suppress context menu
+            if (pointer.button === 2) {
+                scene.selectedTower?.hideRange();
+                scene.selectedTower = undefined;
+                if (scene.buildRangeIndicator)
+                    scene.buildRangeIndicator.setVisible(false);
+                scene.buildMode = false;
+                scene.buildingTowerSelected = null;
+                scene.layerBuildable && scene.layerBuildable.setVisible(false);
+                scene.buildPreview?.setVisible(false);
+                return;
+            }
+
+            // Left-click (button 0) logic
             //1️⃣ Ignore clicks on GameObjects while not in Build Mode
             if (gameObjects.length > 0 && scene.buildMode === false) {
                 return;
@@ -99,15 +113,14 @@ export function setupPointerMoveHandler(scene: any) {
         }
 
         scene.buildPreview.setVisible(true);
-        scene.buildPreview.setPosition(
-            tile.getCenterX(),
-            tile.getCenterY() - 32
-        );
+        const previewY = tile.getCenterY() - 32;
+        scene.buildPreview.setPosition(tile.getCenterX(), previewY);
+        scene.buildPreview.setDepth(Math.floor(previewY));
 
         // Range-Kreis anzeigen
         if (!scene.buildRangeIndicator) {
             scene.buildRangeIndicator = scene.add.graphics();
-            scene.buildRangeIndicator.setDepth(10);
+            scene.buildRangeIndicator.setDepth(9999);
         }
         scene.buildRangeIndicator.clear();
         scene.buildRangeIndicator.fillStyle(0x00ff00, 0.25);
@@ -125,9 +138,10 @@ export function setupPointerMoveHandler(scene: any) {
         }
         scene.buildRangeIndicator.fillCircle(
             tile.getCenterX(),
-            tile.getCenterY() - 32,
+            tile.getCenterY(),
             range
         );
         scene.buildRangeIndicator.setVisible(true);
     });
 }
+
