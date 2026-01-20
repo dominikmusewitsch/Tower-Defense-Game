@@ -64,7 +64,7 @@ export class Tower extends Phaser.GameObjects.Container {
     hideRange() {
         this.rangeCircle.setVisible(false);
     }
-
+    // Aktualisiere die Tiefe basierend auf der Y-Position
     private updateDepth() {
         // Set depth based on Y position for proper rendering order
         // Higher Y position = higher depth (rendered in front)
