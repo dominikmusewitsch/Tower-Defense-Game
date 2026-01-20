@@ -8,7 +8,7 @@ export abstract class Enemy extends Phaser.GameObjects.PathFollower {
     moneyOnDeath: number;
     damageToBase: number;
     isAlive = true;
-    hasReachedBase = false;
+    private _hasReachedBase = false;
     isWorthMoney = true;
     config: EnemyStats;
     lastDirection = "down";
@@ -20,7 +20,7 @@ export abstract class Enemy extends Phaser.GameObjects.PathFollower {
     constructor(
         scene: Phaser.Scene,
         path: Phaser.Curves.Path,
-        ident: EnemyType
+        ident: EnemyType,
     ) {
         super(scene, path, path.startPoint.x, path.startPoint.y, ident);
         scene.add.existing(this);
@@ -50,17 +50,26 @@ export abstract class Enemy extends Phaser.GameObjects.PathFollower {
 
     protected abstract createAnimations(): void;
 
+    get hasReachedBase(): boolean {
+        return this._hasReachedBase;
+    }
+
+    set hasReachedBase(value: boolean) {
+        this._hasReachedBase = value;
+    }
+
     start() {
-        this.startFollow({ rotateToPath: false, duration: this.duration }).on(
-            "complete",
-            () => {
+        this.startFollow({
+            rotateToPath: false,
+            duration: this.duration,
+            onComplete: () => {
                 this.stopFollow();
                 this.hasReachedBase = true;
                 // Enemy reached the end of the path
                 this.healthBar.destroy();
                 this.setVisible(false);
-            }
-        );
+            },
+        });
     }
 
     updateHealthBar() {
@@ -76,7 +85,7 @@ export abstract class Enemy extends Phaser.GameObjects.PathFollower {
             this.x - barWidth / 2,
             this.y - 30,
             barWidth,
-            barHeight
+            barHeight,
         );
 
         // Foreground
@@ -85,7 +94,7 @@ export abstract class Enemy extends Phaser.GameObjects.PathFollower {
             this.x - barWidth / 2 + 1,
             this.y - 29,
             (barWidth - 2) * hpPercent,
-            barHeight - 2
+            barHeight - 2,
         );
     }
 
@@ -113,7 +122,7 @@ export abstract class Enemy extends Phaser.GameObjects.PathFollower {
                 this.setVisible(false);
                 this.setActive(false);
             },
-            this
+            this,
         );
     }
 
@@ -152,10 +161,6 @@ export abstract class Enemy extends Phaser.GameObjects.PathFollower {
 
         this.lastX = this.x;
         this.lastY = this.y;
-    }
-
-    hasReachedEnd(): boolean {
-        return !this.isFollowing();
     }
 }
 
