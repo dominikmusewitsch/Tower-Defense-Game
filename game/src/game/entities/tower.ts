@@ -35,14 +35,14 @@ export class Tower extends Phaser.GameObjects.Container {
             32, // y relativ zum Tower (offset to account for tower visual position)
             this.range, // Radius
             0x00ff00, // Farbe (grün)
-            0.25 // Alpha (transparent)
+            0.25, // Alpha (transparent)
         );
         this.rangeCircle.setVisible(false).setDepth(9999); // Always render on top, independent of y position
         this.createAnimations();
         this.add([towerBase, this.turret]);
         this.updateDepth();
     }
-
+    // Getter für range, fireRate und damage
     get range() {
         return this._range;
     }
@@ -114,7 +114,7 @@ export class Tower extends Phaser.GameObjects.Container {
     update(
         time: number,
         delta: number,
-        enemies: Phaser.GameObjects.Group
+        enemies: Phaser.GameObjects.Group,
     ): void {
         this.updateDepth();
         const target = this.getTarget(enemies);
@@ -136,8 +136,8 @@ export class Tower extends Phaser.GameObjects.Container {
                         this.x,
                         this.y + 32,
                         e.x,
-                        e.y
-                    ) <= this.range && e.isAlive
+                        e.y,
+                    ) <= this.range && e.isAlive,
             );
     }
 
@@ -145,7 +145,7 @@ export class Tower extends Phaser.GameObjects.Container {
         this.turret.play(`tower3turret1-shoot`, true);
         const handler = (
             anim: Phaser.Animations.Animation,
-            frame: Phaser.Animations.AnimationFrame
+            frame: Phaser.Animations.AnimationFrame,
         ) => {
             if (anim.key !== "tower3turret1-shoot") return;
 
@@ -153,7 +153,7 @@ export class Tower extends Phaser.GameObjects.Container {
                 this.spawnProjectile(target);
                 this.turret.off(
                     Phaser.Animations.Events.ANIMATION_UPDATE,
-                    handler
+                    handler,
                 );
             }
         };
