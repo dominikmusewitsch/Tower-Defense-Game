@@ -17,14 +17,14 @@ export class SlingShotTower extends Tower {
         this.config = config;
         scene.add.existing(this);
 
-        const towerBase = scene.add.sprite(0, 0, "tower3", 0);
+        const towerBase = scene.add.sprite(0, 0, "slingshot1base", 0);
         towerBase.setInteractive();
         towerBase.on("pointerdown", () => {
             scene.selectedTower?.hideRange();
             scene.selectedTower = this;
             this.showRange();
         });
-        this.turret = scene.add.sprite(0, -16, "tower3turret1", 0);
+        this.turret = scene.add.sprite(0, -16, "slingshot1turret", 0);
         this.rangeCircle = scene.add.circle(
             0, // x relativ zum Tower
             32, // y relativ zum Tower (offset to account for tower visual position)
@@ -40,10 +40,10 @@ export class SlingShotTower extends Tower {
 
     protected createAnimations(): void {
         const anims = this.scene.anims;
-        if (!anims.exists(`tower3turret1-shoot`)) {
+        if (!anims.exists(`slingshot1turret-shoot`)) {
             anims.create({
-                key: `tower3turret1-shoot`,
-                frames: anims.generateFrameNumbers("tower3turret1", {
+                key: `slingshot1turret-shoot`,
+                frames: anims.generateFrameNumbers("slingshot1turret", {
                     start: 0,
                     end: 7,
                 }),
@@ -51,10 +51,10 @@ export class SlingShotTower extends Tower {
                 repeat: 0,
             });
         }
-        if (!anims.exists(`tower3projectile1-fly`)) {
+        if (!anims.exists(`slingshot1projectile-fly`)) {
             anims.create({
-                key: `tower3projectile1-fly`,
-                frames: anims.generateFrameNumbers("tower3projectile1", {
+                key: `slingshot1projectile-fly`,
+                frames: anims.generateFrameNumbers("slingshot1projectile", {
                     start: 0,
                     end: 5,
                 }),
@@ -62,10 +62,10 @@ export class SlingShotTower extends Tower {
                 repeat: -1,
             });
         }
-        if (!anims.exists(`tower3projectile1-impact`)) {
+        if (!anims.exists(`slingshot1impact`)) {
             anims.create({
-                key: `tower3projectile1-impact`,
-                frames: anims.generateFrameNumbers("tower3projectile1impact", {
+                key: `slingshot1impact`,
+                frames: anims.generateFrameNumbers("slingshot1impact", {
                     start: 0,
                     end: 5,
                 }),
@@ -92,12 +92,12 @@ export class SlingShotTower extends Tower {
     }
 
     protected shoot(target: Enemy): void {
-        this.turret.play(`tower3turret1-shoot`, true);
+        this.turret.play(`slingshot1turret-shoot`, true);
         const handler = (
             anim: Phaser.Animations.Animation,
             frame: Phaser.Animations.AnimationFrame,
         ) => {
-            if (anim.key !== "tower3turret1-shoot") return;
+            if (anim.key !== "slingshot1turret-shoot") return;
 
             if (frame.index === 6 && target) {
                 this.spawnProjectile(target);
@@ -125,9 +125,9 @@ export class SlingShotTower extends Tower {
             this.y + Math.sin(this.turret.rotation) * muzzleDistance;
 
         const projectile = this.scene.add
-            .sprite(muzzleX, muzzleY, "tower3projectile1", 0)
+            .sprite(muzzleX, muzzleY, "slingshot1projectile", 0)
             .setDepth(1);
-        projectile.play("tower3projectile1-fly");
+        projectile.play("slingshot1projectile-fly");
 
         this.scene.tweens.add({
             targets: projectile,
@@ -137,9 +137,9 @@ export class SlingShotTower extends Tower {
             onComplete: () => {
                 projectile.destroy();
                 const impact = this.scene.add
-                    .sprite(target.x, target.y, "tower3projectile1impact", 0)
+                    .sprite(target.x, target.y, "slingshot1impact", 0)
                     .setDepth(1);
-                impact.play("tower3projectile1-impact");
+                impact.play("slingshot1impact");
                 if (target) {
                     target.takeDamage(this.damage);
                 }

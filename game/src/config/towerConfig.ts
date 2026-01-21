@@ -29,9 +29,9 @@ export const TOWER_CONFIGS: Record<TowerType, TowerConfig> = {
         range: 150,
         fireRate: 1200,
         damage: 50,
-        baseSprite: "tower3",
-        turretSprite: "tower3turret1",
-        projectileSprite: "tower3projectile1",
+        baseSprite: "slingshot1base",
+        turretSprite: "slingshot1turret",
+        projectileSprite: "slingshot1projectile",
         description: "Medium single-target damage",
     },
 
