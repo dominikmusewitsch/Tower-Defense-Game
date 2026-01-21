@@ -1,7 +1,7 @@
 import { Tower } from "../entities/tower";
 import { TowerType } from "../../config/towerConfig";
 import { Game } from "../scenes/Game";
-import { SlingShotTower } from "../entities/towers/slingShotTower";
+import { SlingShotTower } from "../entities/towers/slingshotTower";
 
 export class TowerFactory {
     static create(
