@@ -2,6 +2,11 @@ import { Enemy } from "./enemy";
 import { Game as GameScene } from "../scenes/Game";
 import { TowerConfig } from "../../config/towerConfig";
 
+export enum TargetPriority {
+    First = "first",
+    Strongest = "strongest",
+}
+
 export abstract class Tower extends Phaser.GameObjects.Container {
     protected config: TowerConfig;
     protected _range: number;
@@ -10,6 +15,7 @@ export abstract class Tower extends Phaser.GameObjects.Container {
     protected lastFired = 0;
     protected rangeCircle!: Phaser.GameObjects.Arc;
     protected isPreview: boolean;
+    protected targetPriority: TargetPriority = TargetPriority.First;
 
     constructor(
         scene: GameScene,
@@ -93,7 +99,31 @@ export abstract class Tower extends Phaser.GameObjects.Container {
 
     protected getTarget(enemies: Phaser.GameObjects.Group): Enemy | undefined {
         const targets = this.getTargets(enemies);
-        return targets.length > 0 ? targets[0] : undefined;
+        if (targets.length === 0) return undefined;
+
+        switch (this.targetPriority) {
+            case TargetPriority.Strongest:
+                // Get the enemy with the highest health
+                return targets.reduce((strongest, current) =>
+                    current.hp > strongest.hp ? current : strongest,
+                );
+            case TargetPriority.First:
+            default:
+                // Get the enemy furthest along the path (highest progress)
+                return targets.reduce((first, current) => {
+                    return current.pathProgress > first.pathProgress
+                        ? current
+                        : first;
+                });
+        }
+    }
+
+    setTargetPriority(priority: TargetPriority): void {
+        this.targetPriority = priority;
+    }
+
+    getTargetPriority(): TargetPriority {
+        return this.targetPriority;
     }
 
     protected abstract shoot(target: Enemy): void;
