@@ -142,7 +142,7 @@ export class SlingShotTower extends Tower {
                 const impact = this.scene.add
                     .sprite(target.x, target.y, this.config.impactSprite!, 0)
                     .setDepth(1);
-                impact.play(`${this.config.impactSprite}-fly`);
+                impact.play(`${this.config.impactSprite}`);
                 if (target) {
                     target.takeDamage(this.damage);
                 }
