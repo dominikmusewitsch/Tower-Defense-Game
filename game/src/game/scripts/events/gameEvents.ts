@@ -16,7 +16,7 @@ export function handleTowerBuild(scene: Game, pointer: Phaser.Input.Pointer) {
         const towerY = tile.getCenterY() - 32;
 
         const tower = TowerFactory.create(
-            TowerType.Slingshot,
+            config.id,
             scene,
             towerX,
             towerY

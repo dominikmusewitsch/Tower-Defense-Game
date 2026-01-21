@@ -41,7 +41,7 @@ export const TOWER_CONFIGS: Record<TowerType, TowerConfig> = {
         name: "Catapult Tower",
         cost: 100,
         range: 160,
-        fireRate: 2000,
+        fireRate: 500,
         damage: 120,
         baseSprite: "catapult1base",
         weaponSprite: "catapult1weapon",

@@ -1,4 +1,4 @@
-import { TOWER_CONFIGS, TowerType } from "../../config/towerConfig";
+import { TOWER_CONFIGS, TowerConfig, TowerType } from "../../config/towerConfig";
 import { Game } from "../scenes/Game";
 
 export class TowerButton extends Phaser.GameObjects.Container {
@@ -6,7 +6,7 @@ export class TowerButton extends Phaser.GameObjects.Container {
     private bg: Phaser.GameObjects.Rectangle;
     private currentMoney = 0;
     private canAfford = true;
-    private config = TOWER_CONFIGS[TowerType.Slingshot];
+    private config: TowerConfig;
     constructor(
         scene: Phaser.Scene,
         x: number,
