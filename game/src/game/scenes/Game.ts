@@ -30,7 +30,7 @@ export class Game extends Scene {
     private _buildRangeIndicator: Phaser.GameObjects.Graphics | null = null;
     public worlds: WorldsData;
     public waveManager!: WaveManager;
-
+    private levelCompleted = false;
     private worldId!: number;
     private mapId!: number;
     private mapConfig!: MapData;
@@ -102,6 +102,7 @@ export class Game extends Scene {
 
         this.buildMode = false;
 
+        this.levelCompleted = false;
         //Enemy Group und Tower Group init
         this.enemies = this.add.group({
             classType: Enemy,
@@ -177,12 +178,17 @@ export class Game extends Scene {
     }
 
     onLevelCompleted() {
-        console.log("Level completed!");
-        this.scene.stop("UI");
-        this.scene.stop("Game");
-        this.scene.start("GameWon", {
-            worldId: this.worldId,
-            mapId: this.mapId,
+        if (this.levelCompleted) return;
+        this.levelCompleted = true;
+
+        console.log("Level completed! Waiting 4 seconds...");
+        this.time.delayedCall(4000, () => {
+            this.scene.stop("UI");
+            this.scene.stop("Game");
+            this.scene.start("GameWon", {
+                worldId: this.worldId,
+                mapId: this.mapId,
+            });
         });
     }
 
