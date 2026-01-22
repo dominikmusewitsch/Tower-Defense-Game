@@ -14,8 +14,10 @@ export function handleTowerBuild(scene: Game, pointer: Phaser.Input.Pointer) {
     if (tile && tile.index !== 0) {
         const towerX = tile.getCenterX();
         const towerY = tile.getCenterY() - config.offsetY!;
+        const originalTileIndex = tile.index;
 
         const tower = TowerFactory.create(config.id, scene, towerX, towerY);
+        tower.originalTileIndex = originalTileIndex;
         scene.towers.add(tower);
         scene.layerBuildable?.removeTileAt(tile.x, tile.y);
 

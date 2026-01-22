@@ -20,6 +20,11 @@ export abstract class Tower extends Phaser.GameObjects.Container {
     // UI Elements
     protected targetPriorityButton!: Phaser.GameObjects.Container;
     protected targetPriorityText!: Phaser.GameObjects.Text;
+    protected sellButton!: Phaser.GameObjects.Container;
+    protected sellText!: Phaser.GameObjects.Text;
+
+    // Original tile index for restoring after sell
+    public originalTileIndex: number = 1;
 
     constructor(
         scene: GameScene,
@@ -49,6 +54,7 @@ export abstract class Tower extends Phaser.GameObjects.Container {
         // Create targeting priority button (only for non-preview towers)
         if (!isPreview) {
             this.createTargetPriorityButton(scene);
+            this.createSellButton(scene);
         }
     }
 
@@ -104,6 +110,82 @@ export abstract class Tower extends Phaser.GameObjects.Container {
         this.targetPriorityText.setText(label);
     }
 
+    private createSellButton(scene: GameScene) {
+        // Container for the sell button, positioned below the target priority button
+        this.sellButton = scene.add.container(this.x + 50, this.y + 35);
+        this.sellButton.setDepth(10000);
+        this.sellButton.setVisible(false);
+
+        const refundAmount = Math.floor(
+            this.config.cost * (this.config.refundMultiplier ?? 0.5),
+        );
+
+        // Frame background (red-ish for sell)
+        const frame = scene.add.graphics();
+        frame.lineStyle(2, 0xff6666, 1);
+        frame.fillStyle(0x000000, 0.7);
+        frame.fillRoundedRect(-40, -14, 80, 28, 6);
+        frame.strokeRoundedRect(-40, -14, 80, 28, 6);
+
+        // Text
+        this.sellText = scene.add.text(0, 0, `Sell (${refundAmount})`, {
+            fontSize: "11px",
+            color: "#ff6666",
+        });
+        this.sellText.setOrigin(0.5, 0.5);
+
+        // Hit area for clicking
+        const hitArea = scene.add.rectangle(0, 0, 80, 28, 0x000000, 0);
+        hitArea.setInteractive({ useHandCursor: true });
+        hitArea.on("pointerdown", () => {
+            this.sell();
+        });
+
+        this.sellButton.add([frame, this.sellText, hitArea]);
+    }
+
+    private sell() {
+        const scene = this.scene as GameScene;
+        const refundAmount = Math.floor(
+            this.config.cost * (this.config.refundMultiplier ?? 0.5),
+        );
+
+        // Refund money
+        scene.money += refundAmount;
+
+        // Restore buildable tile
+        if (scene.layerBuildable) {
+            const tileX = scene.layerBuildable.worldToTileX(this.x);
+            const tileY = scene.layerBuildable.worldToTileY(
+                this.y + (this.config.offsetY ?? 32),
+            );
+            if (tileX !== null && tileY !== null) {
+                scene.layerBuildable.putTileAt(
+                    this.originalTileIndex,
+                    tileX,
+                    tileY,
+                );
+            }
+        }
+
+        // Hide UI
+        this.hideUi();
+
+        // Remove from towers group
+        scene.towers.remove(this, true, true);
+
+        // Destroy UI elements
+        this.targetPriorityButton?.destroy();
+        this.sellButton?.destroy();
+        this.rangeCircle?.destroy();
+
+        // Deselect tower
+        scene.selectedTower = undefined;
+
+        // Destroy the tower
+        this.destroy();
+    }
+
     get range() {
         return this._range;
     }
@@ -130,6 +212,9 @@ export abstract class Tower extends Phaser.GameObjects.Container {
         if (this.targetPriorityButton) {
             this.targetPriorityButton.setVisible(true);
         }
+        if (this.sellButton) {
+            this.sellButton.setVisible(true);
+        }
     }
 
     hideUi() {
@@ -137,6 +222,9 @@ export abstract class Tower extends Phaser.GameObjects.Container {
 
         if (this.targetPriorityButton) {
             this.targetPriorityButton.setVisible(false);
+        }
+        if (this.sellButton) {
+            this.sellButton.setVisible(false);
         }
     }
 

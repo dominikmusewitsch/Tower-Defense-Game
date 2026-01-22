@@ -8,6 +8,7 @@ export interface TowerConfig {
     id: TowerType;
     name: string;
     cost: number;
+    refundMultiplier: number;
 
     range: number;
     highgroundRangeMultiplier: number;
@@ -29,6 +30,7 @@ export const TOWER_CONFIGS: Record<TowerType, TowerConfig> = {
         id: TowerType.Slingshot,
         name: "Slingshot Tower",
         cost: 30,
+        refundMultiplier: 0.5,
         range: 150,
         highgroundRangeMultiplier: 1.5,
         fireRate: 1200,
@@ -45,6 +47,7 @@ export const TOWER_CONFIGS: Record<TowerType, TowerConfig> = {
         id: TowerType.Catapult,
         name: "Catapult Tower",
         cost: 100,
+        refundMultiplier: 0.5,
         range: 160,
         highgroundRangeMultiplier: 1.5,
         fireRate: 500,
@@ -61,6 +64,7 @@ export const TOWER_CONFIGS: Record<TowerType, TowerConfig> = {
         id: TowerType.Crystal,
         name: "Crystal Tower",
         cost: 80,
+        refundMultiplier: 0.5,
         range: 150,
         highgroundRangeMultiplier: 1.5,
         fireRate: 1500,
