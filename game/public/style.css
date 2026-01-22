@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     color: rgba(255, 255, 255, 0.87);
-    background-color: #000000; 
+    background-color: #000000;
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -218,7 +218,7 @@ body {
 
 .clear-btn {
     padding: 8px 16px;
-    background: #8B0000;
+    background: #8b0000;
     border: none;
     color: #fff;
     border-radius: 4px;
@@ -227,7 +227,7 @@ body {
 }
 
 .clear-btn:hover {
-    background: #B22222;
+    background: #b22222;
 }
 
 .spawns-list {
@@ -293,7 +293,7 @@ body {
 
 .remove-spawn-btn {
     padding: 6px 12px;
-    background: #8B0000;
+    background: #8b0000;
     border: none;
     color: #fff;
     border-radius: 4px;
@@ -303,7 +303,7 @@ body {
 }
 
 .remove-spawn-btn:hover {
-    background: #B22222;
+    background: #b22222;
 }
 
 /* Export Section */
@@ -371,7 +371,7 @@ body {
     margin: 0;
     padding: 15px;
     overflow-x: auto;
-    font-family: 'Courier New', monospace;
+    font-family: "Courier New", monospace;
     font-size: 0.9em;
     color: #0ec3c9;
 }

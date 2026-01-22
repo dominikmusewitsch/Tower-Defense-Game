@@ -41,8 +41,8 @@ function WaveBuilder() {
             prev.map((wave, idx) =>
                 idx === activeWaveIndex
                     ? { ...wave, spawns: [...wave.spawns, newSpawn] }
-                    : wave
-            )
+                    : wave,
+            ),
         );
     };
 
@@ -52,10 +52,12 @@ function WaveBuilder() {
                 idx === activeWaveIndex
                     ? {
                           ...wave,
-                          spawns: wave.spawns.filter((_, i) => i !== spawnIndex),
+                          spawns: wave.spawns.filter(
+                              (_, i) => i !== spawnIndex,
+                          ),
                       }
-                    : wave
-            )
+                    : wave,
+            ),
         );
     };
 
@@ -66,11 +68,13 @@ function WaveBuilder() {
                     ? {
                           ...wave,
                           spawns: wave.spawns.map((spawn, i) =>
-                              i === spawnIndex ? { ...spawn, delay: newDelay } : spawn
+                              i === spawnIndex
+                                  ? { ...spawn, delay: newDelay }
+                                  : spawn,
                           ),
                       }
-                    : wave
-            )
+                    : wave,
+            ),
         );
     };
 
@@ -99,8 +103,8 @@ function WaveBuilder() {
     const clearWave = () => {
         setWaves((prev) =>
             prev.map((wave, idx) =>
-                idx === activeWaveIndex ? { ...wave, spawns: [] } : wave
-            )
+                idx === activeWaveIndex ? { ...wave, spawns: [] } : wave,
+            ),
         );
     };
 
@@ -135,7 +139,8 @@ function WaveBuilder() {
                                 key={enemy}
                                 className="enemy-button"
                                 style={{
-                                    backgroundColor: ENEMY_COLORS[enemy] || "#666",
+                                    backgroundColor:
+                                        ENEMY_COLORS[enemy] || "#666",
                                 }}
                                 onClick={() => addEnemy(enemy)}
                             >
@@ -206,7 +211,9 @@ function WaveBuilder() {
                         ) : (
                             activeWave.spawns.map((spawn, idx) => (
                                 <div key={idx} className="spawn-item">
-                                    <span className="spawn-index">{idx + 1}.</span>
+                                    <span className="spawn-index">
+                                        {idx + 1}.
+                                    </span>
                                     <span
                                         className="spawn-enemy"
                                         style={{
@@ -225,7 +232,7 @@ function WaveBuilder() {
                                             onChange={(e) =>
                                                 updateDelay(
                                                     idx,
-                                                    Number(e.target.value)
+                                                    Number(e.target.value),
                                                 )
                                             }
                                             min={0}
@@ -271,3 +278,4 @@ function WaveBuilder() {
 }
 
 export default WaveBuilder;
+
