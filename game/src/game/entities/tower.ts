@@ -17,6 +17,10 @@ export abstract class Tower extends Phaser.GameObjects.Container {
     protected isPreview: boolean;
     protected targetPriority: TargetPriority = TargetPriority.First;
 
+    // UI Elements
+    protected targetPriorityButton!: Phaser.GameObjects.Container;
+    protected targetPriorityText!: Phaser.GameObjects.Text;
+
     constructor(
         scene: GameScene,
         x: number,
@@ -41,6 +45,63 @@ export abstract class Tower extends Phaser.GameObjects.Container {
         ) {
             this.range *= config.highgroundRangeMultiplier ?? 1.5;
         }
+
+        // Create targeting priority button (only for non-preview towers)
+        if (!isPreview) {
+            this.createTargetPriorityButton(scene);
+        }
+    }
+
+    private createTargetPriorityButton(scene: GameScene) {
+        // Container for the button, positioned to the right of the tower
+        this.targetPriorityButton = scene.add.container(this.x + 50, this.y);
+        this.targetPriorityButton.setDepth(10000);
+        this.targetPriorityButton.setVisible(false);
+
+        // Frame background
+        const frame = scene.add.graphics();
+        frame.lineStyle(2, 0xffffff, 1);
+        frame.fillStyle(0x000000, 0.7);
+        frame.fillRoundedRect(-40, -14, 80, 28, 6);
+        frame.strokeRoundedRect(-40, -14, 80, 28, 6);
+
+        // Text
+        this.targetPriorityText = scene.add.text(0, 0, "First", {
+            fontSize: "12px",
+            color: "#ffffff",
+        });
+        this.targetPriorityText.setOrigin(0.5, 0.5);
+
+        // Hit area for clicking
+        const hitArea = scene.add.rectangle(0, 0, 80, 28, 0x000000, 0);
+        hitArea.setInteractive({ useHandCursor: true });
+        hitArea.on("pointerdown", () => {
+            this.toggleTargetPriority();
+        });
+
+        this.targetPriorityButton.add([
+            frame,
+            this.targetPriorityText,
+            hitArea,
+        ]);
+    }
+
+    private toggleTargetPriority() {
+        const newPriority =
+            this.targetPriority === TargetPriority.First
+                ? TargetPriority.Strongest
+                : TargetPriority.First;
+        this.setTargetPriority(newPriority);
+        this.updateTargetPriorityText();
+    }
+
+    private updateTargetPriorityText() {
+        if (!this.targetPriorityText) return;
+        const label =
+            this.targetPriority === TargetPriority.First
+                ? "First"
+                : "Strongest";
+        this.targetPriorityText.setText(label);
     }
 
     get range() {
@@ -65,10 +126,18 @@ export abstract class Tower extends Phaser.GameObjects.Container {
             this.y + (this.config.offsetY ?? 32),
         );
         this.rangeCircle.setVisible(true);
+
+        if (this.targetPriorityButton) {
+            this.targetPriorityButton.setVisible(true);
+        }
     }
 
     hideUi() {
         this.rangeCircle.setVisible(false);
+
+        if (this.targetPriorityButton) {
+            this.targetPriorityButton.setVisible(false);
+        }
     }
 
     protected updateDepth() {
