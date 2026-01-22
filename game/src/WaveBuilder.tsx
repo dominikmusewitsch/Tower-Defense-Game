@@ -40,6 +40,8 @@ function WaveBuilder() {
     const [activeWaveIndex, setActiveWaveIndex] = useState(0);
     const [defaultDelay, setDefaultDelay] = useState(500);
     const [jsonOutput, setJsonOutput] = useState("");
+    const [jsonImport, setJsonImport] = useState("");
+    const [importError, setImportError] = useState("");
 
     const activeWave = waves[activeWaveIndex];
 
@@ -164,6 +166,35 @@ function WaveBuilder() {
         navigator.clipboard.writeText(jsonOutput);
     };
 
+    const importFromJson = () => {
+        setImportError("");
+        try {
+            const parsed = JSON.parse(jsonImport);
+            if (!Array.isArray(parsed)) {
+                throw new Error("JSON must be an array of waves");
+            }
+            const importedWaves: Wave[] = parsed.map(
+                (wave: any, idx: number) => ({
+                    id: wave.id ?? idx + 1,
+                    spawns: Array.isArray(wave.spawns)
+                        ? wave.spawns.map((spawn: any) => ({
+                              enemyType: spawn.enemyType ?? "",
+                              delay: spawn.delay ?? 0,
+                          }))
+                        : [],
+                }),
+            );
+            if (importedWaves.length === 0) {
+                throw new Error("No waves found in JSON");
+            }
+            setWaves(importedWaves);
+            setActiveWaveIndex(0);
+            setJsonImport("");
+        } catch (e: any) {
+            setImportError(e.message || "Invalid JSON");
+        }
+    };
+
     return (
         <div className="wave-builder">
             <header className="wave-builder-header">
@@ -174,6 +205,24 @@ function WaveBuilder() {
             </header>
 
             <div className="wave-builder-content">
+                {/* Import Section */}
+                <section className="import-section">
+                    <h3>Import Waves JSON</h3>
+                    <textarea
+                        className="json-import-input"
+                        placeholder='Paste waves JSON here, e.g. [{"id": 1, "spawns": [...]}]'
+                        value={jsonImport}
+                        onChange={(e) => setJsonImport(e.target.value)}
+                        rows={4}
+                    />
+                    <button className="import-btn" onClick={importFromJson}>
+                        Import JSON
+                    </button>
+                    {importError && (
+                        <p className="import-error">{importError}</p>
+                    )}
+                </section>
+
                 {/* Enemy Buttons */}
                 <section className="enemy-section">
                     <h2>Enemies</h2>
