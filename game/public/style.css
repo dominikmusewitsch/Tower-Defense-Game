@@ -439,3 +439,69 @@ body {
     color: #0ec3c9;
 }
 
+/* Import Section */
+.import-section {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.import-section h3 {
+    margin: 0 0 15px 0;
+    color: #fff;
+    font-size: 1.2em;
+}
+
+.json-import-input {
+    width: 100%;
+    padding: 12px 15px;
+    background: #222;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: #fff;
+    font-family: "Courier New", monospace;
+    font-size: 0.9em;
+    resize: vertical;
+    box-sizing: border-box;
+    transition: all 0.2s;
+}
+
+.json-import-input::placeholder {
+    color: #666;
+}
+
+.json-import-input:focus {
+    outline: none;
+    border-color: #0ec3c9;
+    box-shadow: 0 0 8px rgba(14, 195, 201, 0.3);
+}
+
+.import-btn {
+    margin-top: 15px;
+    padding: 12px 30px;
+    background: #0ec3c9;
+    border: none;
+    color: #000;
+    font-weight: bold;
+    font-size: 1.1em;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.import-btn:hover {
+    background: #0fd8de;
+    transform: scale(1.02);
+}
+
+.import-error {
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: rgba(255, 0, 0, 0.15);
+    border: 1px solid #ff4444;
+    border-radius: 6px;
+    color: #ff6666;
+    font-size: 0.95em;
+}
+
