@@ -313,7 +313,7 @@
                                 },
                                 {
                                     "enemyType": "magmacrab",
-                                    "delay": 0
+                                    "delay": 750
                                 },
                                 {
                                     "enemyType": "magmacrab",
@@ -1529,7 +1529,7 @@
                                 },
                                 {
                                     "enemyType": "magmacrab",
-                                    "delay": 0
+                                    "delay": 750
                                 },
                                 {
                                     "enemyType": "magmacrab",
@@ -2745,7 +2745,7 @@
                                 },
                                 {
                                     "enemyType": "magmacrab",
-                                    "delay": 0
+                                    "delay": 750
                                 },
                                 {
                                     "enemyType": "magmacrab",
