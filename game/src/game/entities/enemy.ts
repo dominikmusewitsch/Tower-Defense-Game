@@ -228,20 +228,24 @@ export abstract class Enemy extends Phaser.GameObjects.PathFollower {
 
         this.lastX = this.x;
         this.lastY = this.y;
-
     }
 
     playMoneyAnimation() {
-        const moneyText = this.scene.add.text(this.x, this.y - 20, `+${this.moneyOnDeath}`, {
-            fontSize: "14px",
-            color: "#ffff00",
-            stroke: "#000000",
-            strokeThickness: 3,
-        });
+        const moneyText = this.scene.add.text(
+            this.x + 4,
+            this.y - 20,
+            `+${this.moneyOnDeath}`,
+            {
+                fontSize: "14px",
+                color: "#ffff00",
+                stroke: "#000000",
+                strokeThickness: 3,
+            },
+        );
         moneyText.setDepth(1000);
 
         this.scene.tweens.add({
-            targets: moneyText,
+            targets: [moneyText],
             y: this.y - 50,
             alpha: 0,
             duration: 1000,
