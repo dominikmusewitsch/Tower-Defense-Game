@@ -21,7 +21,7 @@ export class GameOver extends Scene {
             })
             .setOrigin(0.5);
 
-        const restartBtn = this.add
+        this.add
             .text(width / 2, height / 2 + 10, "Restart", {
                 fontSize: "32px",
                 color: "#fff",
