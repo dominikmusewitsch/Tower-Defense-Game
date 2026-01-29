@@ -61,7 +61,7 @@ export class Game extends Scene {
             // Stoppe Game und UI, starte GameOver-Screen
             this.scene.stop("UI");
             this.scene.stop("Game");
-            this.scene.start("GameOver");
+            this.scene.start("GameOver", {worldId: this.worldId, mapId: this.mapId} );
         }
     }
     get buildRangeIndicator() {

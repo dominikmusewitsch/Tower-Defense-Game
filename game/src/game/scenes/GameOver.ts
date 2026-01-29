@@ -1,8 +1,14 @@
 import { Scene } from "phaser";
 
 export class GameOver extends Scene {
+    private worldId!: number;
+    private mapId!: number;
     constructor() {
         super({ key: "GameOver" });
+    }
+    init(data: { worldId: number; mapId: number }) {
+        this.worldId = data.worldId;
+        this.mapId = data.mapId;
     }
 
     create() {
@@ -15,8 +21,26 @@ export class GameOver extends Scene {
             })
             .setOrigin(0.5);
 
-        const restartBtn = this.add
-            .text(width / 2, height / 2 + 10, "Restart", {
+        this.add
+            .text(width / 2, height / 2 - 30, "Restart", {
+                fontSize: "32px",
+                color: "#fff",
+                backgroundColor: "#B22222",
+                padding: { left: 16, right: 16, top: 8, bottom: 8 },
+            })
+            .setOrigin(0.5)
+            .setInteractive({ useHandCursor: true })
+            .on("pointerdown", () => {
+                this.scene.stop("GameOver");
+                this.scene.start("Game", {
+                    worldId: this.worldId,
+                    mapId: this.mapId,
+                });
+                this.scene.launch("UI");
+            });
+
+        this.add
+            .text(width / 2, height / 2 + 40, "Back to Main Menu", {
                 fontSize: "32px",
                 color: "#fff",
                 backgroundColor: "#222",
@@ -26,8 +50,7 @@ export class GameOver extends Scene {
             .setInteractive({ useHandCursor: true })
             .on("pointerdown", () => {
                 this.scene.stop("GameOver");
-                this.scene.start("Game");
-                this.scene.launch("UI");
+                this.scene.start("MainMenu");
             });
     }
 }
