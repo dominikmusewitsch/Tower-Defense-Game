@@ -3,10 +3,10 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "tiled/TD-map-lvl3.tmx",
     "expandedProjectPaths": [
-        "asset-active",
-        "."
+        ".",
+        "asset-active"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
@@ -72,6 +72,57 @@
         "tiled/GrassTileset.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
+        },
+        "tiled/TD-map-lvl1.tmx": {
+            "scale": 0.720849609375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 512.5895820632662,
+                "y": 287.8547720652984
+            }
+        },
+        "tiled/TD-map-lvl1.tmx#AnimatedWaterTiles": {
+            "scaleInDock": 1
+        },
+        "tiled/TD-map-lvl1.tmx#GrassTileset": {
+            "scaleInDock": 1
+        },
+        "tiled/TD-map-lvl1.tmx#solid_green": {
+            "scaleInDock": 1
+        },
+        "tiled/TD-map-lvl3.tmx": {
+            "scale": 0.5666,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 489.7635015884222,
+                "y": 332.68619837627955
+            }
+        },
+        "tiled/TD-map-lvl3.tmx#AnimatedWaterTiles": {
+            "scaleInDock": 1
+        },
+        "tiled/TD-map-lvl3.tmx#GrassTileset": {
+            "scaleInDock": 1
+        },
+        "tiled/TD-map-lvl3.tmx#solid_green": {
+            "scaleInDock": 1
+        },
+        "tiled/TD-map-lvl5.tmx": {
+            "scale": 0.5666,
+            "selectedLayer": 8,
+            "viewCenter": {
+                "x": 516.2372043769856,
+                "y": 350.33533356865513
+            }
+        },
+        "tiled/TD-map-lvl5.tmx#AnimatedWaterTiles": {
+            "scaleInDock": 0.6078
+        },
+        "tiled/TD-map-lvl5.tmx#GrassTileset": {
+            "scaleInDock": 0.5008
+        },
+        "tiled/TD-map-lvl5.tmx#solid_green": {
+            "scaleInDock": 1
         }
     },
     "last.exportedFilePath": "/Users/dominik/Desktop/TD/game/public/assets/map",
@@ -80,10 +131,13 @@
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
     "openFiles": [
+        "tiled/TD-map-lvl3.tmx"
     ],
     "project": "TD.tiled-project",
     "property.type": "int",
     "recentFiles": [
+        "tiled/TD-map-lvl1.tmx",
+        "tiled/TD-map-lvl3.tmx",
         "tiled/GrassTileset.tsx",
         "tiled/AnimatedWaterTiles.tsx",
         "/Users/dominik/Desktop/GrassTileset.tsx",
