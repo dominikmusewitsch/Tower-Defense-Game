@@ -69,7 +69,7 @@ export const TOWER_CONFIGS: Record<TowerType, TowerConfig> = {
         cost: 80,
         refundMultiplier: 0.5,
         range: 150,
-        impactRange: 50,
+        impactRange: 100,
         highgroundRangeMultiplier: 1.5,
         fireRate: 1500,
         damage: 75,
