@@ -13,7 +13,7 @@ export function handleTowerBuild(scene: Game, pointer: Phaser.Input.Pointer) {
 
     if (tile && tile.index !== 0) {
         const towerX = tile.getCenterX();
-        const towerY = tile.getCenterY() - config.offsetY!;
+        const towerY = tile.getCenterY() - config.levels[0].offsetY!;
         const originalTileIndex = tile.index;
 
         const tower = TowerFactory.create(config.id, scene, towerX, towerY);
@@ -89,11 +89,11 @@ export function setupTowerSelectedHandler(scene: Game) {
         config = configs[towerId];
         scene.buildingTowerSelected = towerId;
         scene.layerBuildable?.setVisible(true);
-        scene.buildingTowerSelectedCost = config.cost;
+        scene.buildingTowerSelectedCost = config.levels[0].cost;
         scene.buildMode = true;
         scene.buildPreview?.destroy();
         scene.buildPreview = scene.add
-            .image(0, 0, config.baseSprite)
+            .image(0, 0, `${config.spriteBase}base`)
             .setAlpha(0.5)
             .setDepth(2);
     });
@@ -117,7 +117,7 @@ export function setupPointerMoveHandler(scene: any) {
         }
 
         scene.buildPreview.setVisible(true);
-        const previewY = tile.getCenterY() - config.offsetY!;
+        const previewY = tile.getCenterY() - config.levels[0].offsetY!;
         scene.buildPreview.setPosition(tile.getCenterX(), previewY);
         scene.buildPreview.setDepth(Math.floor(previewY));
 
@@ -129,7 +129,7 @@ export function setupPointerMoveHandler(scene: any) {
         scene.buildRangeIndicator.clear();
         scene.buildRangeIndicator.fillStyle(0x00ff00, 0.25);
         // Default-Range wie im Tower
-        let range = config.range;
+        let range = config.levels[0].range;
         if (
             scene.layerHighground &&
             scene.layerHighground.getTileAtWorldXY(
@@ -138,7 +138,7 @@ export function setupPointerMoveHandler(scene: any) {
                 false,
             ) !== null
         ) {
-            range = range * config.highgroundRangeMultiplier;
+            range = range * config.levels[0].highgroundRangeMultiplier;
         }
         scene.buildRangeIndicator.fillCircle(
             tile.getCenterX(),

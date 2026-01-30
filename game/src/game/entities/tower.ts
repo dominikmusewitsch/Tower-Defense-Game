@@ -1,6 +1,6 @@
 import { Enemy } from "./enemy";
 import { Game as GameScene } from "../scenes/Game";
-import { TowerConfig } from "../../config/towerConfig";
+import { TowerConfig, TowerInstanceConfig } from "../../config/towerConfig";
 
 export enum TargetPriority {
     First = "first",
@@ -8,7 +8,8 @@ export enum TargetPriority {
 }
 
 export abstract class Tower extends Phaser.GameObjects.Container {
-    protected config: TowerConfig;
+    protected config: TowerInstanceConfig;
+    protected level: number;
     protected _range: number;
     protected _fireRate: number;
     protected _damage: number;
@@ -22,6 +23,11 @@ export abstract class Tower extends Phaser.GameObjects.Container {
     protected sellButton!: Phaser.GameObjects.Container;
     protected sellText!: Phaser.GameObjects.Text;
 
+    protected spriteBase: string;
+    protected spriteWeapon: string;
+    protected spriteProjectile: string;
+    protected spriteImpact: string;
+
     // Original tile index for restoring after sell
     public originalTileIndex: number = 1;
 
@@ -30,13 +36,15 @@ export abstract class Tower extends Phaser.GameObjects.Container {
         x: number,
         y: number,
         config: TowerConfig,
+        level: number,
         isPreview: boolean,
     ) {
         super(scene, x, y);
-        this.config = config;
-        this._range = config.range;
-        this._fireRate = config.fireRate;
-        this._damage = config.damage;
+        this.config = this.getTowerInstanceConfig(config, level);
+        this.level = level;
+        this._range = this.config.range;
+        this._fireRate = this.config.fireRate;
+        this._damage = this.config.damage;
         this.isPreview = isPreview;
         if (
             scene.layerHighground.getTileAtWorldXY(
@@ -45,7 +53,7 @@ export abstract class Tower extends Phaser.GameObjects.Container {
                 false,
             )
         ) {
-            this.range *= config.highgroundRangeMultiplier ?? 1.5;
+            this.range *= this.config.highgroundRangeMultiplier ?? 1.5;
         }
 
         // Create targeting priority button (only for non-preview towers)
@@ -53,6 +61,36 @@ export abstract class Tower extends Phaser.GameObjects.Container {
             this.createTargetPriorityButton(scene);
             this.createSellButton(scene);
         }
+        this.spriteBase = this.getSpriteKey("base");
+        this.spriteWeapon = this.getSpriteKey("weapon");
+        this.spriteProjectile = this.getSpriteKey("projectile");
+        this.spriteImpact = this.getSpriteKey("impact");
+    }
+
+    private getTowerInstanceConfig(
+        config: TowerConfig,
+        level: number,
+    ): TowerInstanceConfig {
+        const levelIndex = Math.max(
+            0,
+            Math.min(level - 1, config.levels.length - 1),
+        );
+        return {
+            ...config.levels[levelIndex],
+            id: config.id,
+            name: config.name,
+            spriteBase: config.spriteBase,
+            level,
+        };
+    }
+
+    private getSpriteKey(
+        part: "base" | "weapon" | "projectile" | "impact",
+    ): string {
+        if (part === "base") {
+            return `${this.config.spriteBase}${part}`;
+        }
+        return `${this.config.id}${this.config.level}${part}`;
     }
 
     private createTargetPriorityButton(scene: GameScene) {
@@ -276,9 +314,12 @@ export abstract class Tower extends Phaser.GameObjects.Container {
         ignoreList: Enemy[] = [],
         forTowerShot = true,
     ): Enemy | undefined {
-        const targets = this.getTargets(enemies, radius, position, forTowerShot).filter(
-            (e) => !e.isGoingToDie && !ignoreList.includes(e),
-        );
+        const targets = this.getTargets(
+            enemies,
+            radius,
+            position,
+            forTowerShot,
+        ).filter((e) => !e.isGoingToDie && !ignoreList.includes(e));
         if (targets.length === 0) return undefined;
 
         switch (this.targetPriority) {
