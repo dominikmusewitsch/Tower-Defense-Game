@@ -4,6 +4,18 @@ export enum TowerType {
     Crystal = "crystal",
 }
 
+export interface FrameRange {
+    start: number;
+    end: number;
+}
+
+export interface AnimationFrames {
+    idle?: FrameRange;
+    shoot?: FrameRange;
+    projectile?: FrameRange;
+    impact?: FrameRange;
+}
+
 export interface TowerLevelConfig {
     cost: number;
     range: number;
@@ -15,6 +27,7 @@ export interface TowerLevelConfig {
     offsetY?: number;
     refundMultiplier: number;
     description?: string;
+    animationFrames?: AnimationFrames;
 }
 
 export interface TowerConfig {
@@ -46,6 +59,11 @@ export const TOWER_CONFIGS: Record<TowerType, TowerConfig> = {
                 offsetY: 32,
                 refundMultiplier: 0.5,
                 description: "Medium single-target damage",
+                animationFrames: {
+                    shoot: { start: 0, end: 7 },
+                    projectile: { start: 0, end: 5 },
+                    impact: { start: 0, end: 5 },
+                },
             },
             {
                 cost: 50,
@@ -56,6 +74,11 @@ export const TOWER_CONFIGS: Record<TowerType, TowerConfig> = {
                 offsetY: 32,
                 refundMultiplier: 0.5,
                 description: "Medium single-target damage",
+                animationFrames: {
+                    shoot: { start: 0, end: 7 },
+                    projectile: { start: 0, end: 5 },
+                    impact: { start: 0, end: 5 },
+                },
             },
             {
                 cost: 80,
@@ -66,6 +89,11 @@ export const TOWER_CONFIGS: Record<TowerType, TowerConfig> = {
                 offsetY: 32,
                 refundMultiplier: 0.5,
                 description: "Medium single-target damage",
+                animationFrames: {
+                    shoot: { start: 0, end: 7 },
+                    projectile: { start: 0, end: 5 },
+                    impact: { start: 0, end: 5 },
+                },
             },
         ],
     },
@@ -85,6 +113,11 @@ export const TOWER_CONFIGS: Record<TowerType, TowerConfig> = {
                 offsetY: 32,
                 refundMultiplier: 0.5,
                 description: "Slow but heavy splash damage",
+                animationFrames: {
+                    shoot: { start: 0, end: 7 },
+                    projectile: { start: 0, end: 5 },
+                    impact: { start: 0, end: 5 },
+                },
             },
             {
                 cost: 150,
@@ -96,6 +129,11 @@ export const TOWER_CONFIGS: Record<TowerType, TowerConfig> = {
                 offsetY: 32,
                 refundMultiplier: 0.5,
                 description: "Slow but heavy splash damage",
+                animationFrames: {
+                    shoot: { start: 0, end: 7 },
+                    projectile: { start: 0, end: 5 },
+                    impact: { start: 0, end: 5 },
+                },
             },
             {
                 cost: 220,
@@ -107,6 +145,11 @@ export const TOWER_CONFIGS: Record<TowerType, TowerConfig> = {
                 offsetY: 32,
                 refundMultiplier: 0.5,
                 description: "Slow but heavy splash damage",
+                animationFrames: {
+                    shoot: { start: 0, end: 7 },
+                    projectile: { start: 0, end: 5 },
+                    impact: { start: 0, end: 5 },
+                },
             },
         ],
     },
@@ -127,6 +170,12 @@ export const TOWER_CONFIGS: Record<TowerType, TowerConfig> = {
                 offsetY: 64,
                 refundMultiplier: 0.5,
                 description: "Zaps an enemy... ouch!",
+                animationFrames: {
+                    idle: { start: 0, end: 9 },
+                    shoot: { start: 16, end: 31 },
+                    projectile: { start: 0, end: 4 },
+                    impact: { start: 0, end: 4 },
+                },
             },
             {
                 cost: 120,
@@ -139,6 +188,12 @@ export const TOWER_CONFIGS: Record<TowerType, TowerConfig> = {
                 offsetY: 64,
                 refundMultiplier: 0.5,
                 description: "Zaps an enemy... ouch!",
+                animationFrames: {
+                    idle: { start: 0, end: 9 },
+                    shoot: { start: 16, end: 31 },
+                    projectile: { start: 0, end: 5 },
+                    impact: { start: 0, end: 5 },
+                },
             },
             {
                 cost: 180,
@@ -151,6 +206,12 @@ export const TOWER_CONFIGS: Record<TowerType, TowerConfig> = {
                 offsetY: 64,
                 refundMultiplier: 0.5,
                 description: "Zaps an enemy... ouch!",
+                animationFrames: {
+                    idle: { start: 0, end: 0 },
+                    shoot: { start: 0, end: 7 },
+                    projectile: { start: 0, end: 5 },
+                    impact: { start: 0, end: 5 },
+                },
             },
         ],
     },

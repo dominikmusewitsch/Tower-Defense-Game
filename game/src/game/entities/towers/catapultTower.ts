@@ -46,10 +46,10 @@ export class CatapultTower extends Tower {
         if (!anims.exists(`${this.spriteWeapon}-shoot`)) {
             anims.create({
                 key: `${this.spriteWeapon}-shoot`,
-                frames: anims.generateFrameNumbers(this.spriteWeapon, {
-                    start: 0,
-                    end: 7,
-                }),
+                frames: anims.generateFrameNumbers(
+                    this.spriteWeapon,
+                    this.config.animationFrames?.shoot,
+                ),
                 frameRate: (this.fireRate / 1000) * 8,
                 repeat: 0,
             });
@@ -57,10 +57,10 @@ export class CatapultTower extends Tower {
         if (!anims.exists(`${this.spriteProjectile}-fly`)) {
             anims.create({
                 key: `${this.spriteProjectile}-fly`,
-                frames: anims.generateFrameNumbers(this.spriteProjectile, {
-                    start: 0,
-                    end: 5,
-                }),
+                frames: anims.generateFrameNumbers(
+                    this.spriteProjectile,
+                    this.config.animationFrames?.projectile,
+                ),
                 frameRate: 12,
                 repeat: -1,
             });
@@ -68,10 +68,10 @@ export class CatapultTower extends Tower {
         if (!anims.exists(`${this.spriteImpact}`)) {
             anims.create({
                 key: `${this.spriteImpact}`,
-                frames: anims.generateFrameNumbers(this.spriteImpact, {
-                    start: 0,
-                    end: 5,
-                }),
+                frames: anims.generateFrameNumbers(
+                    this.spriteImpact,
+                    this.config.animationFrames?.impact,
+                ),
                 frameRate: 16,
                 repeat: 0,
             });

@@ -48,10 +48,10 @@ export class CrystalTower extends Tower {
         if (!anims.exists(`${this.spriteWeapon}-idle`)) {
             anims.create({
                 key: `${this.spriteWeapon}-idle`,
-                frames: anims.generateFrameNumbers(this.spriteWeapon, {
-                    start: 0,
-                    end: 9,
-                }),
+                frames: anims.generateFrameNumbers(
+                    this.spriteWeapon,
+                    this.config.animationFrames?.idle,
+                ),
                 frameRate: (this.fireRate / 1000) * 8,
                 repeat: -1,
             });
@@ -60,10 +60,10 @@ export class CrystalTower extends Tower {
         if (!anims.exists(`${this.spriteWeapon}-shoot`)) {
             anims.create({
                 key: `${this.spriteWeapon}-shoot`,
-                frames: anims.generateFrameNumbers(this.spriteWeapon, {
-                    start: 16,
-                    end: 31,
-                }),
+                frames: anims.generateFrameNumbers(
+                    this.spriteWeapon,
+                    this.config.animationFrames?.shoot,
+                ),
                 frameRate: (this.fireRate / 1000) * 8,
                 repeat: 0,
             });
@@ -71,10 +71,10 @@ export class CrystalTower extends Tower {
         if (!anims.exists(`${this.spriteProjectile}-fly`)) {
             anims.create({
                 key: `${this.spriteProjectile}-fly`,
-                frames: anims.generateFrameNumbers(this.spriteProjectile, {
-                    start: 0,
-                    end: 4,
-                }),
+                frames: anims.generateFrameNumbers(
+                    this.spriteProjectile,
+                    this.config.animationFrames?.projectile,
+                ),
                 frameRate: 12,
                 repeat: 0,
             });
@@ -82,10 +82,10 @@ export class CrystalTower extends Tower {
         if (!anims.exists(`${this.spriteImpact}`)) {
             anims.create({
                 key: `${this.spriteImpact}`,
-                frames: anims.generateFrameNumbers(this.spriteImpact, {
-                    start: 0,
-                    end: 4,
-                }),
+                frames: anims.generateFrameNumbers(
+                    this.spriteImpact,
+                    this.config.animationFrames?.impact,
+                ),
                 frameRate: 16,
                 repeat: 0,
             });
